@@ -14,7 +14,7 @@ def style_table(v):
         return None
 
 
-@st.cache
+@st.cache(allow_output_mutation=True)
 def convert_df(df):
      # IMPORTANT: Cache the conversion to prevent computation on every rerun
      return df.to_csv(index=False)
@@ -49,7 +49,7 @@ def get_vs_data(vs_db_files):
 
 
 
-@st.cache
+@st.cache(allow_output_mutation=True)
 def get_datamap(datamap_json_file):
     datamap = {}
     questions_label_text = []
@@ -76,7 +76,7 @@ def get_datamap(datamap_json_file):
 
     return [datamap,questions_label_text]
 
-@st.cache
+@st.cache(allow_output_mutation=True)
 def get_df_with_answer_labels(df,vars_arr):
     global datamap
     if vars_arr == "ALL":
