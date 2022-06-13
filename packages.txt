@@ -1,0 +1,4 @@
+json
+numpy
+openpyxl
+streamlit.components.v1
