@@ -283,7 +283,7 @@ with dataset:
     if proj_number == "":
         st.error("Project number is not defined")
     else:
-        
+        dataset.empty()
         #datamap to formated json
         dm_json = get_datamap("datamap_json_file")
         datamap = dm_json[0]
