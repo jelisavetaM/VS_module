@@ -53,7 +53,8 @@ def get_vs_data(vs_db_files):
 def get_datamap(datamap_json_file):
     datamap = {}
     questions_label_text = []
-    datamap_json = json.load(datamap_json_file)
+    #datamap_json = json.load(datamap_json_file)
+	datamap_json = "https://github.com/jelisavetaM/VS_module/blob/main/datamap.json"
     for var in datamap_json["variables"]:
         q_title = var["label"]
         answers = {}
