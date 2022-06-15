@@ -56,7 +56,7 @@ def get_datamap(datamap_json_file):
     datamap = {}
     questions_label_text = []
     #datamap_json = json.load(datamap_json_file)
-    url = requests.get("https://jsonplaceholder.typicode.com/users")
+    url = requests.get("https://raw.githubusercontent.com/jelisavetaM/VS_module/main/datamap.json")
     text = url.text
     datamap_json = json.loads(text)
     #response = urlopen("https://github.com/jelisavetaM/VS_module/blob/main/datamap.json")
