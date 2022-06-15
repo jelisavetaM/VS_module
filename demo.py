@@ -233,7 +233,7 @@ def splitEngine(measures, splitScheme, levels):
         st.write(dfAll.astype(str))
     return tables
 
-def inputEntered:
+def inputEntered ():
     proj_number.text = ("sta")
 
 header = st.container()
