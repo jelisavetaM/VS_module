@@ -4,6 +4,7 @@ import json
 import numpy as np
 from openpyxl import load_workbook, Workbook
 from urllib.request import urlopen
+import requests, json	
 
 
 def style_table(v):
@@ -55,8 +56,11 @@ def get_datamap(datamap_json_file):
     datamap = {}
     questions_label_text = []
     #datamap_json = json.load(datamap_json_file)
-    response = urlopen("https://github.com/jelisavetaM/VS_module/blob/main/datamap.json")
-    datamap_json = json.loads(response.read())
+    url = requests.get("https://jsonplaceholder.typicode.com/users")
+    text = url.text
+    datamap_json = json.loads(text)
+    #response = urlopen("https://github.com/jelisavetaM/VS_module/blob/main/datamap.json")
+    #datamap_json = json.loads(response.read())
     for var in datamap_json["variables"]:
         q_title = var["label"]
         answers = {}
@@ -77,7 +81,7 @@ def get_datamap(datamap_json_file):
         datamap[q_title] = q_json
         questions_label_text.append(q_title + "->" + var["title"])
 
-    return [datamap,questions_label_text]
+    return [datamap,questions_label_text]   
 
 @st.cache(allow_output_mutation=True)
 def get_df_with_answer_labels(df,vars_arr):
