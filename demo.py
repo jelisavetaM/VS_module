@@ -271,7 +271,7 @@ with header:
 
 
 with dataset:
-    st.text_input("Enter the project number:", value="", max_chars=6, autocomplete="on", placeholder= "6-digit project number (ex. 2022126)")
+    proj_number = st.text_input("Enter the project number:", value=0, max_chars=6, autocomplete="on", placeholder= "6-digit project number (ex. 2022126)")
     # st.write(st.session_state)
 
     #file uploaders
@@ -280,8 +280,8 @@ with dataset:
     #datamap_json_file = st.file_uploader('Upload JSON Datamap:', type=None, accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False)
 
     #if survey_db is None or datamap_json_file is None or len(vs_db_files)==0:#ovde dodaj i uslov za VS
-    if False:#ovde dodaj i uslov za VS
-        st.error("Please upload the files!")
+    if proj_number == 0
+        st.error("Project nuber is not defined")
     else:
         
         #datamap to formated json
