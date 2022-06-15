@@ -239,8 +239,8 @@ def inputEntered ():
 header = st.container()
 dataset = st.container()
 with header:
-    st.text_input('Hello [user]!')
-    proj_number = st.input("Enter the project number:", value="", autocomplete="on", placeholder= "7-digit project number (ex. 2022126)", on_change=inputEntered)
+    st.text('Hello [user]!')
+    proj_number = st.text_input("Enter the project number:", value="", autocomplete="on", placeholder= "7-digit project number (ex. 2022126)", on_change=inputEntered)
 with dataset:
     # st.write(st.session_state)
     #file uploaders
