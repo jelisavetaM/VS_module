@@ -275,11 +275,12 @@ with dataset:
     # st.write(st.session_state)
 
     #file uploaders
-    survey_db = st.file_uploader('Upload Survey Database:', type=None, accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False)
-    vs_db_files = st.file_uploader('Upload VS Database:', type=None, accept_multiple_files=True, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False)
-    datamap_json_file = st.file_uploader('Upload JSON Datamap:', type=None, accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False)
+    #survey_db = st.file_uploader('Upload Survey Database:', type=None, accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False)
+    #vs_db_files = st.file_uploader('Upload VS Database:', type=None, accept_multiple_files=True, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False)
+    #datamap_json_file = st.file_uploader('Upload JSON Datamap:', type=None, accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False)
 
-    if survey_db is None or datamap_json_file is None or len(vs_db_files)==0:#ovde dodaj i uslov za VS
+    #if survey_db is None or datamap_json_file is None or len(vs_db_files)==0:#ovde dodaj i uslov za VS
+    if False:#ovde dodaj i uslov za VS
         st.error("Please upload the files!")
     else:
         
