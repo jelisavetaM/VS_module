@@ -267,7 +267,7 @@ dataset = st.container()
 
 with header:
     st.title('Hello [user]!')
-    st.text_input("Enter the 6-digit project number: (ex. 2022126)", value="", max_chars=6, autocomplete="on", placeholder= "(ex. 2022126)")
+    st.text_input("Enter the project number:", value="", max_chars=6, autocomplete="on", placeholder= "6-digit project number (ex. 2022126)")
 
 
 with dataset:
