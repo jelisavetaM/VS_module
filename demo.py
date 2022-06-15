@@ -27,6 +27,7 @@ def get_survey_data(survey_db):
 
 # @st.cache
 def get_vs_data(vs_db_files):
+    st.write(vs_db_files)	
     df_vs = pd.DataFrame()
     for file in vs_db_files:
         df = pd.read_csv(file, delimiter=";" , keep_default_na=False)
