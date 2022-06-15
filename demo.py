@@ -415,6 +415,8 @@ with dataset:
                 st.download_button('Data Formated', f, file_name='final.xlsx')
 
         st.stop()
+	else:
+		st.error("Project number is not defined")
 
 
 
@@ -457,5 +459,4 @@ with dataset:
 
         with open('final.xlsx', mode = "rb") as f:
             st.download_button('Data Formated', f, file_name='final.xlsx')
-    if not proj_number:
-        errorPlaceholder.text("Project number is not defined")
+        
