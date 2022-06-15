@@ -285,15 +285,15 @@ with dataset:
     else:
         
         #datamap to formated json
-        dm_json = get_datamap(datamap_json_file)
+        dm_json = get_datamap("datamap_json_file")
         datamap = dm_json[0]
         questions_label_text = dm_json[1]
 
         #Survey data
-        surveyFinalData = get_survey_data(survey_db)
+        surveyFinalData = get_survey_data("survey_db")
 
         #VS database
-        df_vs = get_vs_data(vs_db_files)
+        df_vs = get_vs_data("vs_db_files")
         # st.write(df_vs)
 
 
