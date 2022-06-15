@@ -267,11 +267,11 @@ dataset = st.container()
 
 with header:
     st.title('Hello [user]!')
-    st.text_input("Enter the project number:", value="", max_chars=6, autocomplete="on", placeholder= "6-digit project number (ex. 2022126)")
+
 
 
 with dataset:
-
+    st.text_input("Enter the project number:", value="", max_chars=6, autocomplete="on", placeholder= "6-digit project number (ex. 2022126)")
     # st.write(st.session_state)
 
     #file uploaders
