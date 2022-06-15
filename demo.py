@@ -239,7 +239,7 @@ def inputEntered ():
 header = st.container()
 dataset = st.container()
 with header:
-    st.text('Hello [user]!')
+    st.title('Hello [user]!')
     proj_number = st.text_input("Enter the project number:", value="", autocomplete="on", placeholder= "7-digit project number (ex. 2022126)", on_change=inputEntered)
 with dataset:
     # st.write(st.session_state)
