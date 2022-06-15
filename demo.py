@@ -5,8 +5,6 @@ import numpy as np
 from openpyxl import load_workbook, Workbook
 from urllib.request import urlopen
 import requests, json	
-
-
 def style_table(v):
     if v < 4:
         return 'color:green;'
@@ -14,18 +12,14 @@ def style_table(v):
         return 'color:red;'
     else:
         return None
-
-
 @st.cache(allow_output_mutation=True)
 def convert_df(df):
      # IMPORTANT: Cache the conversion to prevent computation on every rerun
      return df.to_csv(index=False)
-
 @st.cache(allow_output_mutation=True)
 def get_survey_data(survey_db):
     survey_db = 'https://raw.githubusercontent.com/jelisavetaM/VS_module/main/220437.xlsx'
     return pd.read_excel(survey_db)
-
 # @st.cache
 def get_vs_data(vs_db_files):	
     df_vs = pd.DataFrame()
@@ -33,7 +27,6 @@ def get_vs_data(vs_db_files):
     for file in vs_db_files:
         df = pd.read_csv(file, delimiter=";" , keep_default_na=False)
         df_vs = df_vs.append(df)
-
     df_vs = df_vs[df_vs['USER ID'] != '']
     df_vs['CONSIDERATIONS'] = np.where(df_vs['CONSIDERATIONS'] == 'NULL', 0, df_vs['CONSIDERATIONS'])
     df_vs['QUANTITY'] = np.where(df_vs['QUANTITY'] == 'NULL', 0, df_vs['QUANTITY'])
@@ -45,14 +38,8 @@ def get_vs_data(vs_db_files):
     #trenutno, dok se ne vidi sta je bug sa money spent na VS platformi
     df_vs = df_vs[ (df_vs['PENETRATION_BINARY'] == 1) & (df_vs['MONEY SPENT'] != 'NO SHOPPING') ]
     df_vs = df_vs.astype({'MONEY SPENT':'float', 'PRICE':'float'})
-
     # st.write(df_vs)
     return df_vs
-
-
-
-
-
 @st.cache(allow_output_mutation=True)
 def get_datamap(datamap_json_file):
     datamap = {}
@@ -72,7 +59,6 @@ def get_datamap(datamap_json_file):
         elif "values" in var:
             for val in var["values"]:
                 answers[val["value"]] = val["title"]
-
         q_json = {
             "text" : var["title"],
             "type" : var["type"],
@@ -82,9 +68,7 @@ def get_datamap(datamap_json_file):
         }
         datamap[q_title] = q_json
         questions_label_text.append(q_title + "->" + var["title"])
-
     return [datamap,questions_label_text]   
-
 @st.cache(allow_output_mutation=True)
 def get_df_with_answer_labels(df,vars_arr):
     global datamap
@@ -100,7 +84,6 @@ def get_df_with_answer_labels(df,vars_arr):
                 df_return[col] = df_return[col].replace(lab, datamap[col]["answers"][lab])
     
     return df_return
-
 def get_measure_df(measure, level, split):
 	global shoppingMergedData, data_survey
 	definition = {
@@ -164,7 +147,6 @@ def get_measure_df(measure, level, split):
 		'aggfunction' : "sum",
 		'base' : 1}
 	}
-
 	# st.write(shoppingMergedData)
 	# st.stop()
 	if measure == "Total Units" or measure == "Total Value" or measure == "Unit Buy Rate (Units per Buyer)" or measure == "Value Buy Rate (Units per Buyer)":
@@ -185,12 +167,8 @@ def get_measure_df(measure, level, split):
 	kpi = kpi.reset_index()
 	kpi.rename(columns = {'index':level}, inplace = True)
 	return kpi
-
-
-
 def splitEngine(measures, splitScheme, levels):
     global shoppingMergedData
-
     tables = []
     for level in levels:
         dfAll = pd.DataFrame()
@@ -204,13 +182,11 @@ def splitEngine(measures, splitScheme, levels):
         for sublevel in levels[level]:
             if levels[level][sublevel]:
                 sublevels.append(sublevel)
-
         for measure in measures:
             df_splits = pd.DataFrame()
             sp_arr = ["", "", ""]
             for split in splitScheme:
                 df = get_measure_df(measure,level,split)
-
                 # st.write(df.astype(str))
                 try:
                     df = df[df[level].isin(sublevels)]
@@ -233,11 +209,9 @@ def splitEngine(measures, splitScheme, levels):
                     df_splits = df
                 else:
                     df_splits = pd.merge(df_splits, df, how='left', on=["level","sublevel"])
-
             dfAll = pd.concat([dfAll,df_splits])
             if len(arrays[0])==0:
                 arrays[0] = sp_arr
-
         dfAll = dfAll.sort_values(by=['sublevel'])
         
         
@@ -254,31 +228,21 @@ def splitEngine(measures, splitScheme, levels):
         dfAll.columns = multi_column_names
         
         dfAll.reset_index(drop=True, inplace=True)
-
         tables.append(dfAll)
         st.info(level)
         st.write(dfAll.astype(str))
-
     return tables
-
-
 header = st.container()
 dataset = st.container()
-
 with header:
     st.title('Hello [user]!')
     proj_number = st.text_input("Enter the project number:", value="", max_chars=10, autocomplete="on", placeholder= "7-digit project number (ex. 2022126)")
-    errorPlaceholder = st.empty()
-
-
 with dataset:
     # st.write(st.session_state)
-
     #file uploaders
     #survey_db = st.file_uploader('Upload Survey Database:', type=None, accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False)
     #vs_db_files = st.file_uploader('Upload VS Database:', type=None, accept_multiple_files=True, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False)
     #datamap_json_file = st.file_uploader('Upload JSON Datamap:', type=None, accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False)
-
     #if survey_db is None or datamap_json_file is None or len(vs_db_files)==0:#ovde dodaj i uslov za VS
     if proj_number:
         dataset.empty()
@@ -286,23 +250,17 @@ with dataset:
         dm_json = get_datamap("datamap_json_file")
         datamap = dm_json[0]
         questions_label_text = dm_json[1]
-
         #Survey data
         surveyFinalData = get_survey_data("survey_db")
-
         #VS database
         df_vs = get_vs_data("vs_db_files")
         # st.write(df_vs)
-
-
         #splits
         st.sidebar.write(pd.DataFrame(questions_label_text, index=None, columns=["questions"]))
         st.sidebar.download_button(label="datamap json", data=str(datamap), file_name="datamap.json",mime='text/csv')
         # st.sidebar.write(datamap)
         # st.stop()
-
         parameters = {}
-
         col_measurments,col_splits = st.columns(2)
         
         with col_measurments:
@@ -324,17 +282,12 @@ with dataset:
         with col_splits:
             st.info("Add splits:")
             splits_long =  st.multiselect("Type to search or just scroll:",questions_label_text)
-
         splits_short = ["CELL"]
         for split in splits_long:
             if split.split("->")[0] not in splits_short:
                 splits_short.append(split.split("->")[0])
-
         parameters["splits"] = splits_short
-
-
         col_lev1,col_lev2 = st.columns(2)
-
         with col_lev1:
             st.info("Choose levels:")
             levels = ["SKU","BRAND","SUBBRAND","PRODUCT CATEGORY","PURPOSE","CLIENT","UNIT OF MEASUREMENT","SHELF","KPI1","KPI2","KPI3","KPI4","KPI5","PRODUCT DESCRIPTION 1","PRODUCT DESCRIPTION 2","PRODUCT DESCRIPTION 3","Custom attribute levels"]
@@ -348,12 +301,9 @@ with dataset:
                         parameters["levels"][level] = st.checkbox(level, value=True, key="lvl_"+level)
                     else:
                         parameters["levels"][level] = st.checkbox(level, key="lvl_"+level)
-
             # st.write(parameters["levels"])
-
         with col_lev2:
             parameters["sublevels"] = {}
-
             if not levels_select_all:
                 for level in parameters["levels"]:
                     if parameters["levels"][level]==True:
@@ -370,35 +320,21 @@ with dataset:
                     parameters["sublevels"][level] = {}
                     for sublevel in df_vs[level].unique():
                         parameters["sublevels"][level][str(sublevel)] = True
-
-
         uuid_and_split = splits_short.copy()
         uuid_and_split.append("uuid")
         data_survey = get_df_with_answer_labels(surveyFinalData,uuid_and_split)
-
         shoppingMergedData = pd.merge(data_survey, df_vs, how='left', left_on='uuid', right_on='USER ID')
-
-
-
-
-
-
         if st.button("CALC"):
             chosen_measures = []
             for m in parameters["measurments"]:
                 if parameters["measurments"][m]:
                     chosen_measures.append(m)
-
-
             tables = splitEngine(chosen_measures, splits_short, parameters["sublevels"])
-
-
             with pd.ExcelWriter("final.xlsx") as writer:
                 startrow = 0
                 for table in tables:
                     table.to_excel(writer, sheet_name="tables", startrow=startrow, startcol=0, index=True)
                     startrow = startrow + table.shape[0] + 5
-
             wb = load_workbook("final.xlsx")
             ws = wb['tables']
             row_reduced_height = []
@@ -409,47 +345,23 @@ with dataset:
                         ws.row_dimensions[row[0].row].height = 0.5
                         row_reduced_height.append(row[0].row)
             wb.save("final.xlsx")
-
                 
             with open('final.xlsx', mode = "rb") as f:
                 st.download_button('Data Formated', f, file_name='final.xlsx')
-
         st.stop()
-
-
-
-    else:
-        st.error("Project number is not defined")
-
-
-
-
-
-
-
-
-
-
         df = get_df_with_answer_labels(surveyFinalData,"ALL")#ili moze ceo df da prebaci u labele
-
-
         ctb1 = pd.crosstab(df['CELL'], df['GENDER'], normalize='columns', margins = True).mul(100).round(0)
         ctb1.index.name = "CELLxGENDER"
         ctb1 = ctb1.style.applymap(style_table)
-
         ctb2 = pd.crosstab(df['CELL'], df['AGE_CATEGORY'], normalize='columns', margins = True).mul(100).round(0)
         ctb2.index.name = "CELLxAGE_CATEGORY"
         ctb2 = ctb2.style.applymap(style_table)
-
         st.write(ctb1.index.name)
         st.dataframe(ctb1)
-
         st.write(ctb2.index.name)
         st.dataframe(ctb2)
-
         hyperlinks = ['=HYPERLINK("#tables!A1",tables!A1)','=HYPERLINK("#tables!A7",tables!A7)']
         df_hyperlinks = pd.DataFrame(columns = ['hyperlinks'], data =  hyperlinks)
-
         # st.write(df_hyperlinks)
         with pd.ExcelWriter("final.xlsx") as writer:
             df_hyperlinks.to_excel(writer, sheet_name="hyperlinks", index=None)
@@ -459,4 +371,6 @@ with dataset:
 
         with open('final.xlsx', mode = "rb") as f:
             st.download_button('Data Formated', f, file_name='final.xlsx')
-        
+
+   #if not proj_number:
+      #st.error("Project number is not defined")
