@@ -3,6 +3,7 @@ import pandas as pd
 import json 
 import numpy as np
 from openpyxl import load_workbook, Workbook
+from urllib.request import urlopen
 
 
 def style_table(v):
