@@ -268,7 +268,7 @@ dataset = st.container()
 with header:
     st.title('Hello [user]!')
     proj_number = st.text_input("Enter the project number:", value="", max_chars=10, autocomplete="on", placeholder= "7-digit project number (ex. 2022126)")
-
+    errorPlaceholder = st.empty()
 
 
 with dataset:
@@ -458,4 +458,4 @@ with dataset:
         with open('final.xlsx', mode = "rb") as f:
             st.download_button('Data Formated', f, file_name='final.xlsx')
     if not proj_number:
-        st.error("Project number is not defined")
+        errorPlaceholder.text = "Project number is not defined"
