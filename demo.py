@@ -30,9 +30,9 @@ def get_vs_data(vs_db_files):
     df_vs = pd.DataFrame()
     df_vs = ['https://raw.githubusercontent.com/jelisavetaM/VS_module/main/Report%20Products%20-%202022044_vs_cell1.csv','https://raw.githubusercontent.com/jelisavetaM/VS_module/main/Report%20Products%20-%202022044_vs_cell2.csv', 'https://raw.githubusercontent.com/jelisavetaM/VS_module/main/Report%20Products%20-%202022044_vs_cell3.csv']
     for file in vs_db_files:
-	st.write(file)
+        st.write(file)
         df = pd.read_csv(file, delimiter=";" , keep_default_na=False)
-	st.write(df)
+        st.write(df)
         #df_vs = df_vs.append(df)
 
     df_vs = df_vs[df_vs['USER ID'] != '']
