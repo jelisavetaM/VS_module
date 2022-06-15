@@ -232,11 +232,15 @@ def splitEngine(measures, splitScheme, levels):
         st.info(level)
         st.write(dfAll.astype(str))
     return tables
+
+def inputEntered:
+    proj_number.text = ("sta")
+
 header = st.container()
 dataset = st.container()
 with header:
     st.title('Hello [user]!')
-    proj_number = st.text_input("Enter the project number:", value="", max_chars=10, autocomplete="on", placeholder= "7-digit project number (ex. 2022126)")
+    proj_number = st.text_input("Enter the project number:", value="", max_chars=10, autocomplete="on", placeholder= "7-digit project number (ex. 2022126)", on_change=inputEntered)
 with dataset:
     # st.write(st.session_state)
     #file uploaders
