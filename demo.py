@@ -23,6 +23,7 @@ def convert_df(df):
 
 @st.cache(allow_output_mutation=True)
 def get_survey_data(survey_db):
+    survey_db = 'https://raw.githubusercontent.com/jelisavetaM/VS_module/main/220437.xlsx'
     return pd.read_excel(survey_db)
 
 # @st.cache
