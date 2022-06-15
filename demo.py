@@ -280,8 +280,8 @@ with dataset:
     #datamap_json_file = st.file_uploader('Upload JSON Datamap:', type=None, accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False)
 
     #if survey_db is None or datamap_json_file is None or len(vs_db_files)==0:#ovde dodaj i uslov za VS
-    if proj_number == 0
-        st.error("Project nuber is not defined")
+    if proj_number == 0:
+        st.error("Project number is not defined")
     else:
         
         #datamap to formated json
