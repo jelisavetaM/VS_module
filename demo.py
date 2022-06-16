@@ -234,7 +234,7 @@ def splitEngine(measures, splitScheme, levels):
     return tables
 def inputEntered ():
     st.write("Data generated for project: " + st.session_state.text_key)
-    placeholder.write("original text")
+    placeholder.text("original text")
 
 
 header = st.container()
