@@ -548,7 +548,7 @@ with dataset:
     
                 
             with open('final.xlsx', mode = "rb") as f:
-                st.download_button('Data Formated', f, file_name= 'Export_' + st.session_state.text_key + 'version_1.xlsx')
+                st.download_button('Generate Excel Export', f, file_name= 'Export_' + st.session_state.text_key + '_version_1.xlsx')
     
     
     
@@ -581,7 +581,7 @@ with dataset:
     
     
             with open('final.xlsx', mode = "rb") as f:
-                st.download_button('Data Formated', f, file_name='final.xlsx')
+                st.download_button('Generate Excel Export', f, file_name= 'Export_' + st.session_state.text_key + '_version_1.xlsx')
     
         st.stop()
     
