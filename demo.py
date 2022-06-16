@@ -276,209 +276,209 @@ with dataset:
         parameters = {}
         col_measurments,col_splits = st.columns(2)
         
-    with col_measurments:
-        st.info("Choose measurments:")
-        measurments = ["Consideration on total sample","Penetration on total sample","Total Units","Total Value","Share of Total Units","Share of Total Value","Unit Buy Rate (Units per Buyer)","Value Buy Rate(Value per Buyer)"]
-        
-        parameters["measurments"] = {}
-        
-        measurments_select_all = st.checkbox("ALL MEASUREMENT")
-        for m in measurments:
-            if measurments_select_all:
-                parameters["measurments"][m] = st.checkbox(m, value=True)
-            else:
-                parameters["measurments"][m] = st.checkbox(m)
-    
-    with col_splits:
-        st.info("Add splits:")
-        splits_long =  st.multiselect("Type to search or just scroll:",questions_label_text)
-
-    splits_short = ["CELL"]
-    for split in splits_long:
-        if split.split("->")[0] not in splits_short:
-            splits_short.append(split.split("->")[0])
-
-    parameters["splits"] = splits_short
-
-
-    col_lev1,col_lev2 = st.columns(2)
-
-    with col_lev1:
-        st.info("Choose levels:")
-        levels = ["SKU","BRAND","SUBBRAND","PRODUCT CATEGORY","PURPOSE","CLIENT","UNIT OF MEASUREMENT","SHELF","KPI1","KPI2","KPI3","KPI4","KPI5","PRODUCT DESCRIPTION 1","PRODUCT DESCRIPTION 2","PRODUCT DESCRIPTION 3","Custom attribute levels"]
-        
-        parameters["levels"] = {}
-        
-        temporarly_disabled_levels = ["KPI1","KPI2"]
-        
-        levels_select_all = st.checkbox("ALL LEVELS")
-        for level in levels:
-            if level in df_vs.columns:
-                if ( len(list(df_vs[level].unique()))==1 and list(df_vs[level].unique())[0]=="NOT DEFINED" ) or level in temporarly_disabled_levels:
-                    parameters["levels"][level] = st.checkbox(level, disabled=True, key="lvl_"+level)
-                elif levels_select_all:
-                    parameters["levels"][level] = st.checkbox(level, value=True, key="lvl_"+level)
+        with col_measurments:
+            st.info("Choose measurments:")
+            measurments = ["Consideration on total sample","Penetration on total sample","Total Units","Total Value","Share of Total Units","Share of Total Value","Unit Buy Rate (Units per Buyer)","Value Buy Rate(Value per Buyer)"]
+            
+            parameters["measurments"] = {}
+            
+            measurments_select_all = st.checkbox("ALL MEASUREMENT")
+            for m in measurments:
+                if measurments_select_all:
+                    parameters["measurments"][m] = st.checkbox(m, value=True)
                 else:
-                    parameters["levels"][level] = st.checkbox(level, key="lvl_"+level)
-
-    with col_lev2:
-        parameters["sublevels"] = {}
-
-        if not levels_select_all:
-            for level in parameters["levels"]:
-                if parameters["levels"][level]==True:
-                    st.info(level)
-                    sublevels_select_all = st.checkbox("Select all", key="sh_" + level, value = True)
-                    
+                    parameters["measurments"][m] = st.checkbox(m)
+        
+        with col_splits:
+            st.info("Add splits:")
+            splits_long =  st.multiselect("Type to search or just scroll:",questions_label_text)
+    
+        splits_short = ["CELL"]
+        for split in splits_long:
+            if split.split("->")[0] not in splits_short:
+                splits_short.append(split.split("->")[0])
+    
+        parameters["splits"] = splits_short
+    
+    
+        col_lev1,col_lev2 = st.columns(2)
+    
+        with col_lev1:
+            st.info("Choose levels:")
+            levels = ["SKU","BRAND","SUBBRAND","PRODUCT CATEGORY","PURPOSE","CLIENT","UNIT OF MEASUREMENT","SHELF","KPI1","KPI2","KPI3","KPI4","KPI5","PRODUCT DESCRIPTION 1","PRODUCT DESCRIPTION 2","PRODUCT DESCRIPTION 3","Custom attribute levels"]
+            
+            parameters["levels"] = {}
+            
+            temporarly_disabled_levels = ["KPI1","KPI2"]
+            
+            levels_select_all = st.checkbox("ALL LEVELS")
+            for level in levels:
+                if level in df_vs.columns:
+                    if ( len(list(df_vs[level].unique()))==1 and list(df_vs[level].unique())[0]=="NOT DEFINED" ) or level in temporarly_disabled_levels:
+                        parameters["levels"][level] = st.checkbox(level, disabled=True, key="lvl_"+level)
+                    elif levels_select_all:
+                        parameters["levels"][level] = st.checkbox(level, value=True, key="lvl_"+level)
+                    else:
+                        parameters["levels"][level] = st.checkbox(level, key="lvl_"+level)
+    
+        with col_lev2:
+            parameters["sublevels"] = {}
+    
+            if not levels_select_all:
+                for level in parameters["levels"]:
+                    if parameters["levels"][level]==True:
+                        st.info(level)
+                        sublevels_select_all = st.checkbox("Select all", key="sh_" + level, value = True)
+                        
+                        sublevels_list = list(df_vs[level].unique())
+                        sublevels_list.sort()
+                        if "NOT DEFINED" in sublevels_list:
+                            sublevels_list.remove("NOT DEFINED")
+                            sublevels_list.append("NOT DEFINED")
+    
+                        if not sublevels_select_all:
+                            parameters["sublevels"][level] = st.multiselect("Type to search or just scroll:",sublevels_list, key="sublevel_"+str(level))
+                        elif sublevels_select_all:
+                            parameters["sublevels"][level] = sublevels_list
+                        
+            elif levels_select_all:
+                for level in parameters["levels"]:
                     sublevels_list = list(df_vs[level].unique())
                     sublevels_list.sort()
-                    if "NOT DEFINED" in sublevels_list:
-                        sublevels_list.remove("NOT DEFINED")
-                        sublevels_list.append("NOT DEFINED")
-
-                    if not sublevels_select_all:
-                        parameters["sublevels"][level] = st.multiselect("Type to search or just scroll:",sublevels_list, key="sublevel_"+str(level))
-                    elif sublevels_select_all:
-                        parameters["sublevels"][level] = sublevels_list
-                    
-        elif levels_select_all:
-            for level in parameters["levels"]:
-                sublevels_list = list(df_vs[level].unique())
-                sublevels_list.sort()
-                parameters["sublevels"][level] = sublevels_list
-
-    uuid_and_split = splits_short.copy()
-    uuid_and_split.append("uuid")
-    data_survey = get_df_with_answer_labels(surveyFinalData,uuid_and_split)
-
-    shoppingMergedData = pd.merge(data_survey, df_vs, how='left', left_on='uuid', right_on='USER ID')
-
-    #STARO
-    if st.button("CALC V1"):
-        chosen_measures = []
-        for m in parameters["measurments"]:
-            if parameters["measurments"][m]:
-                chosen_measures.append(m)
-
-
-        tables_arr = splitEngine(chosen_measures, splits_short, parameters["sublevels"])
-
-        tables = tables_arr[0]
-        tables_by_measure = tables_arr[1]
-
-
+                    parameters["sublevels"][level] = sublevels_list
+    
+        uuid_and_split = splits_short.copy()
+        uuid_and_split.append("uuid")
+        data_survey = get_df_with_answer_labels(surveyFinalData,uuid_and_split)
+    
+        shoppingMergedData = pd.merge(data_survey, df_vs, how='left', left_on='uuid', right_on='USER ID')
+    
+        #STARO
+        if st.button("CALC V1"):
+            chosen_measures = []
+            for m in parameters["measurments"]:
+                if parameters["measurments"][m]:
+                    chosen_measures.append(m)
+    
+    
+            tables_arr = splitEngine(chosen_measures, splits_short, parameters["sublevels"])
+    
+            tables = tables_arr[0]
+            tables_by_measure = tables_arr[1]
+    
+    
+            with pd.ExcelWriter("final.xlsx") as writer:
+                startrow = 0
+                for table in tables:
+                    table.to_excel(writer, sheet_name="by_level", startrow=startrow, startcol=0, index=True)
+                    startrow = startrow + table.shape[0] + 5
+    
+                startrow_measure = 0
+                for level in tables_by_measure:
+                    for table in tables_by_measure[level]:
+                        tables_by_measure[level][table].to_excel(writer, sheet_name="by_measure", startrow=startrow_measure, startcol=0, index=True)
+                        startrow_measure = startrow_measure + tables_by_measure[level][table].shape[0] + 5
+    
+    
+            wb = load_workbook("final.xlsx")
+    
+            ws = wb['by_level']
+            row_reduced_height = []
+            for row in ws.iter_rows():
+                if not any(cell.value for cell in row):
+                    # ws.delete_rows(row[0].row)
+                    if row[0].row - 1 not in row_reduced_height:
+                        ws.row_dimensions[row[0].row].height = 0.5
+                        row_reduced_height.append(row[0].row)
+    
+            ws = wb['by_measure']
+            row_reduced_height = []
+            for row in ws.iter_rows():
+                if not any(cell.value for cell in row):
+                    # ws.delete_rows(row[0].row)
+                    if row[0].row - 1 not in row_reduced_height:
+                        ws.row_dimensions[row[0].row].height = 0.5
+                        row_reduced_height.append(row[0].row)
+    
+            wb.save("final.xlsx")
+    
+                
+            with open('final.xlsx', mode = "rb") as f:
+                st.download_button('Data Formated', f, file_name='final.xlsx')
+    
+    
+    
+        #NOVO
+        if st.button("CALC V2"):
+            chosen_measures = []
+            for m in parameters["measurments"]:
+                if parameters["measurments"][m]:
+                    chosen_measures.append(m)
+    
+    
+            tables = splitEngine2(chosen_measures, splits_short, parameters["sublevels"])
+    
+            with pd.ExcelWriter("final.xlsx") as writer:
+                for t in tables:
+                    tables[t].to_excel(writer, sheet_name=t)
+    
+    
+            wb = load_workbook("final.xlsx")
+            ws = wb['by_level']
+            ws.freeze_panes = ws['A4']
+            ws.auto_filter.ref = "A3:AA3"
+            wb.save("final.xlsx")
+    
+            wb = load_workbook("final.xlsx")
+            ws = wb['by_measure']
+            ws.freeze_panes = ws['A4']
+            ws.auto_filter.ref = "A3:AA3"
+            wb.save("final.xlsx")
+    
+    
+            with open('final.xlsx', mode = "rb") as f:
+                st.download_button('Data Formated', f, file_name='final.xlsx')
+    
+        st.stop()
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        df = get_df_with_answer_labels(surveyFinalData,"ALL")#ili moze ceo df da prebaci u labele
+    
+    
+        ctb1 = pd.crosstab(df['CELL'], df['GENDER'], normalize='columns', margins = True).mul(100).round(0)
+        ctb1.index.name = "CELLxGENDER"
+        ctb1 = ctb1.style.applymap(style_table)
+    
+        ctb2 = pd.crosstab(df['CELL'], df['AGE_CATEGORY'], normalize='columns', margins = True).mul(100).round(0)
+        ctb2.index.name = "CELLxAGE_CATEGORY"
+        ctb2 = ctb2.style.applymap(style_table)
+    
+        st.write(ctb1.index.name)
+        st.dataframe(ctb1)
+    
+        st.write(ctb2.index.name)
+        st.dataframe(ctb2)
+    
+        hyperlinks = ['=HYPERLINK("#tables!A1",tables!A1)','=HYPERLINK("#tables!A7",tables!A7)']
+        df_hyperlinks = pd.DataFrame(columns = ['hyperlinks'], data =  hyperlinks)
+    
+        # st.write(df_hyperlinks)
         with pd.ExcelWriter("final.xlsx") as writer:
-            startrow = 0
-            for table in tables:
-                table.to_excel(writer, sheet_name="by_level", startrow=startrow, startcol=0, index=True)
-                startrow = startrow + table.shape[0] + 5
-
-            startrow_measure = 0
-            for level in tables_by_measure:
-                for table in tables_by_measure[level]:
-                    tables_by_measure[level][table].to_excel(writer, sheet_name="by_measure", startrow=startrow_measure, startcol=0, index=True)
-                    startrow_measure = startrow_measure + tables_by_measure[level][table].shape[0] + 5
-
-
-        wb = load_workbook("final.xlsx")
-
-        ws = wb['by_level']
-        row_reduced_height = []
-        for row in ws.iter_rows():
-            if not any(cell.value for cell in row):
-                # ws.delete_rows(row[0].row)
-                if row[0].row - 1 not in row_reduced_height:
-                    ws.row_dimensions[row[0].row].height = 0.5
-                    row_reduced_height.append(row[0].row)
-
-        ws = wb['by_measure']
-        row_reduced_height = []
-        for row in ws.iter_rows():
-            if not any(cell.value for cell in row):
-                # ws.delete_rows(row[0].row)
-                if row[0].row - 1 not in row_reduced_height:
-                    ws.row_dimensions[row[0].row].height = 0.5
-                    row_reduced_height.append(row[0].row)
-
-        wb.save("final.xlsx")
-
+            df_hyperlinks.to_excel(writer, sheet_name="hyperlinks", index=None)
+            ctb1.to_excel(writer, sheet_name="tables")
+            ctb2.to_excel(writer, sheet_name="tables", startrow=ctb1.data.shape[0] + 3, startcol=0)
             
+    
         with open('final.xlsx', mode = "rb") as f:
             st.download_button('Data Formated', f, file_name='final.xlsx')
-
-
-
-    #NOVO
-    if st.button("CALC V2"):
-        chosen_measures = []
-        for m in parameters["measurments"]:
-            if parameters["measurments"][m]:
-                chosen_measures.append(m)
-
-
-        tables = splitEngine2(chosen_measures, splits_short, parameters["sublevels"])
-
-        with pd.ExcelWriter("final.xlsx") as writer:
-            for t in tables:
-                tables[t].to_excel(writer, sheet_name=t)
-
-
-        wb = load_workbook("final.xlsx")
-        ws = wb['by_level']
-        ws.freeze_panes = ws['A4']
-        ws.auto_filter.ref = "A3:AA3"
-        wb.save("final.xlsx")
-
-        wb = load_workbook("final.xlsx")
-        ws = wb['by_measure']
-        ws.freeze_panes = ws['A4']
-        ws.auto_filter.ref = "A3:AA3"
-        wb.save("final.xlsx")
-
-
-        with open('final.xlsx', mode = "rb") as f:
-            st.download_button('Data Formated', f, file_name='final.xlsx')
-
-    st.stop()
-
-
-
-
-
-
-
-
-
-
-
-
-
-    df = get_df_with_answer_labels(surveyFinalData,"ALL")#ili moze ceo df da prebaci u labele
-
-
-    ctb1 = pd.crosstab(df['CELL'], df['GENDER'], normalize='columns', margins = True).mul(100).round(0)
-    ctb1.index.name = "CELLxGENDER"
-    ctb1 = ctb1.style.applymap(style_table)
-
-    ctb2 = pd.crosstab(df['CELL'], df['AGE_CATEGORY'], normalize='columns', margins = True).mul(100).round(0)
-    ctb2.index.name = "CELLxAGE_CATEGORY"
-    ctb2 = ctb2.style.applymap(style_table)
-
-    st.write(ctb1.index.name)
-    st.dataframe(ctb1)
-
-    st.write(ctb2.index.name)
-    st.dataframe(ctb2)
-
-    hyperlinks = ['=HYPERLINK("#tables!A1",tables!A1)','=HYPERLINK("#tables!A7",tables!A7)']
-    df_hyperlinks = pd.DataFrame(columns = ['hyperlinks'], data =  hyperlinks)
-
-    # st.write(df_hyperlinks)
-    with pd.ExcelWriter("final.xlsx") as writer:
-        df_hyperlinks.to_excel(writer, sheet_name="hyperlinks", index=None)
-        ctb1.to_excel(writer, sheet_name="tables")
-        ctb2.to_excel(writer, sheet_name="tables", startrow=ctb1.data.shape[0] + 3, startcol=0)
-        
-
-    with open('final.xlsx', mode = "rb") as f:
-        st.download_button('Data Formated', f, file_name='final.xlsx')
