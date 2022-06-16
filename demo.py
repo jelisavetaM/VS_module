@@ -235,8 +235,7 @@ def splitEngine(measures, splitScheme, levels):
 
 def inputEntered ():
     with header2:
-        st.markdown("Data generated for project: **" + st.session_state.text_key + "**.<br>"
-        "If you want to change project, just re-enter the number in the inout below and press Enter.")
+        st.markdown("Data generated for project: **" + st.session_state.text_key + "**. </br> If you want to change project, just re-enter the number in the inout below and press Enter.", unsafe_allow_html=True)
         st.markdown("-------------------------------------------------------------------------------------------")
 		
 header1 = st.container()
