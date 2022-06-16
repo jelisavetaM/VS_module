@@ -233,17 +233,13 @@ def splitEngine(measures, splitScheme, levels):
         st.write(dfAll.astype(str))
     return tables
 def inputEntered ():
-    st.write("Data generated for project: " + st.session_state.text_key)
-    placeholder.text("original text")
+    st.write("Data generated for project: " + st.session_state.text_key + ". If you want to change project, just re-enter the number in the inout below and press Enter.")
 
 
 header = st.container()
 dataset = st.container()
 with header:
     st.title('Hello [user]!')
-
-    placeholder = st.empty()
-    placeholder.text("Initial text")
     proj_number = st.text_input("Enter the project number:", value="", autocomplete="on", placeholder= "7-digit project number (ex. 2022126)", on_change=inputEntered, key='text_key')
 with dataset:
     # st.write(st.session_state)
