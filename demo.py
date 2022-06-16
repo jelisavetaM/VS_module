@@ -169,7 +169,10 @@ def get_measure_df(measure, level, split):
 	return kpi
 def splitEngine(measures, splitScheme, levels):
     global shoppingMergedData
+
     tables = []
+    tables_by_measure = {}
+    arrays_by_measure = [[],[]]
     for level in levels:
         dfAll = pd.DataFrame()
         # arrays = [
@@ -178,15 +181,17 @@ def splitEngine(measures, splitScheme, levels):
         # ]
         arrays = [[],[]]
         
-        sublevels = []
-        for sublevel in levels[level]:
-            if levels[level][sublevel]:
-                sublevels.append(sublevel)
+        sublevels = levels[level]
+
+        if level not in tables_by_measure:
+            tables_by_measure[level] = {}
+
         for measure in measures:
             df_splits = pd.DataFrame()
             sp_arr = ["", "", ""]
             for split in splitScheme:
                 df = get_measure_df(measure,level,split)
+
                 # st.write(df.astype(str))
                 try:
                     df = df[df[level].isin(sublevels)]
@@ -195,7 +200,6 @@ def splitEngine(measures, splitScheme, levels):
                     st.write(df.astype(str))
                     st.stop()
                 
-                # st.write(df.astype(str))
                 # st.stop()
                 
                 df.insert(0, 'level', level)
@@ -209,11 +213,28 @@ def splitEngine(measures, splitScheme, levels):
                     df_splits = df
                 else:
                     df_splits = pd.merge(df_splits, df, how='left', on=["level","sublevel"])
+
+            # st.write(df_splits.astype(str))
+
             dfAll = pd.concat([dfAll,df_splits])
             if len(arrays[0])==0:
                 arrays[0] = sp_arr
+            if len(arrays_by_measure[0])==0:
+                arrays_by_measure[0] = sp_arr
+
+            if measure not in tables_by_measure[level]:
+                tables_by_measure[level][measure] = pd.DataFrame()
+            
+            try:
+                tables_by_measure[level][measure] = pd.concat([tables_by_measure[level][measure], df_splits])
+            except:
+                st.write("aaaaaaaaaaaaa")
+                st.write(tables_by_measure[measure])
+                st.write(df_splits)
+                st.stop()
+            
+
         dfAll = dfAll.sort_values(by=['sublevel'])
-        
         
         # OVDE TREBA DODATI DA UBACI SAMPLE SIZE
         # sampleSizes = data_survey[split].value_counts()
@@ -226,11 +247,134 @@ def splitEngine(measures, splitScheme, levels):
         multi_column_names = pd.MultiIndex.from_tuples(tuples, names=["Var Name", "Var Label"])
         
         dfAll.columns = multi_column_names
-        
         dfAll.reset_index(drop=True, inplace=True)
         tables.append(dfAll)
         st.info(level)
         st.write(dfAll.astype(str))
+
+
+    for level in tables_by_measure:
+        for measure in tables_by_measure[level]:
+            arrays_by_measure[1] = list(tables_by_measure[level][measure].columns)
+            tuples = list(zip(*arrays_by_measure))
+            multi_column_names = pd.MultiIndex.from_tuples(tuples, names=["Var Name", "Var Label"])
+            tables_by_measure[level][measure].columns = multi_column_names
+            tables_by_measure[level][measure].reset_index(drop=True, inplace=True)
+
+
+    # st.write(tables_by_measure)
+    return [tables,tables_by_measure]
+
+#v2
+def splitEngine2(measures, splitScheme, levels):
+    global shoppingMergedData
+
+    table = pd.DataFrame()
+    arrays = [[],[]]
+    # arrays = [
+            # ["bar", "bar", "baz", "baz", "foo", "foo", "qux", "qux"],
+            # ["one", "two", "one", "two", "one", "two", "one", "two"]
+    # ]
+
+    for level in levels:
+        sublevels = levels[level]
+        df_by_level = pd.DataFrame()
+
+        for measure in measures:
+            df_splits = pd.DataFrame()
+            sp_arr = ["", "", ""]
+            for split in splitScheme:
+                df = get_measure_df(measure,level,split)
+
+                # st.write(df.astype(str))
+                try:
+                    df = df[df[level].isin(sublevels)]
+                except:
+                    st.error("Calculation get_measure_df failed for measure: " + measure)
+                    st.write(df.astype(str))
+                    st.stop()
+                
+                # st.stop()
+                
+                df.insert(0, 'level', level)
+                df = df.rename(columns={level: "sublevel","Total" : "Total_" + str(split)})
+                
+                for x in range(0,(df.shape[1]-2)):
+                    sp_arr.append(split)
+                
+                if df_splits.empty:
+                    df.insert(2, 'measurment', measure)
+                    df_splits = df
+                else:
+                    df_splits = pd.merge(df_splits, df, how='left', on=["level","sublevel"])
+
+            # st.write(df_splits.astype(str))
+
+            df_by_level = pd.concat([df_by_level,df_splits])
+            if len(arrays[0])==0:
+                arrays[0] = sp_arr
+
+        # df_by_level = df_by_level.sort_values(by=['sublevel'])
+        df_by_level.reset_index(drop=True, inplace=True)
+        
+        # df_by_level.loc[df_by_level.shape[0]] = empty_row
+
+        # OVDE TREBA DODATI DA UBACI SAMPLE SIZE
+        # sampleSizes = data_survey[split].value_counts()
+        # sampleSizes['Total'] = sampleSizes.sum()
+        # N = pd.DataFrame(data = [sampleSizes], index = ['Sample size'], columns=dfAll.columns)
+        # dfAll = pd.concat([N, dfAll])
+        
+        
+        table = pd.concat([table,df_by_level])
+
+
+
+
+    table1 = table.sort_values(by=['level','sublevel','measurment'])
+    table1.reset_index(drop=True, inplace=True)
+    # st.write(table1.astype(str))
+    table2 = table.sort_values(by=['measurment','level','sublevel'])
+    table2.reset_index(drop=True, inplace=True)
+    # st.write(table2.astype(str))
+    
+    tables = {
+        "by_level" : table1,
+        "by_measure" : table2
+    }
+
+
+    for t in tables:
+        table = tables[t]
+        empty_dic = {}
+        for col in list(table.columns):
+            empty_dic[col] = ["   "]
+        empty_df = pd.DataFrame.from_dict(empty_dic)
+
+        places_to_insert_empty_df = []
+        already_inserted_empty = 0
+        for i in range(0,len(table)-1):
+            if i > 0 and table["level"][i] != table["level"][i-1]:
+                places_to_insert_empty_df.append(i+already_inserted_empty)
+                already_inserted_empty+=1
+
+        for i in places_to_insert_empty_df:
+            table = pd.concat([table.iloc[:i], empty_df, table.iloc[i:]])
+            table.reset_index(drop=True, inplace=True)
+
+
+        arrays[1] = list(table.columns)
+        tuples = list(zip(*arrays))
+        multi_column_names = pd.MultiIndex.from_tuples(tuples, names=["Var Name", "Var Label"])
+        
+        table.columns = multi_column_names
+        table.reset_index(drop=True, inplace=True)
+        tables[t] = table
+        # st.write(table.astype(str))
+
+
+    st.write(tables["by_level"].astype(str))
+    st.write(tables["by_measure"].astype(str))
     return tables
 
 def inputEntered ():
