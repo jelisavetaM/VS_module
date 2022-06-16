@@ -498,7 +498,7 @@ with dataset:
         shoppingMergedData = pd.merge(data_survey, df_vs, how='left', left_on='uuid', right_on='USER ID')
     
         #STARO
-        if st.button("CALC V1"):
+        if st.button("Run calculations - V1"):
             chosen_measures = []
             for m in parameters["measurments"]:
                 if parameters["measurments"][m]:
@@ -548,12 +548,12 @@ with dataset:
     
                 
             with open('final.xlsx', mode = "rb") as f:
-                st.download_button('Data Formated', f, file_name='final.xlsx')
+                st.download_button('Data Formated', f, file_name= 'Export_' + st.session_state.text_key + 'version_1.xlsx')
     
     
     
         #NOVO
-        if st.button("CALC V2"):
+        if st.button("Run calculations - V2"):
             chosen_measures = []
             for m in parameters["measurments"]:
                 if parameters["measurments"][m]:
