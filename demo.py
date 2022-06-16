@@ -235,12 +235,12 @@ def splitEngine(measures, splitScheme, levels):
 def inputEntered ():
     st.markdown("Data generated for project: **" + st.session_state.text_key + "**.") 
     st.markdown("If you want to change project, just re-enter the number in the inout below and press Enter.")
-
+    title = st.empty()
 
 header = st.container()
 dataset = st.container()
 with header:
-    st.title('Hello [user]!')
+    title = st.title('Hello [user]!')
     proj_number = st.text_input("Enter the project number:", value="", autocomplete="on", placeholder= "7-digit project number (ex. 2022126)", on_change=inputEntered, key='text_key')
 with dataset:
     # st.write(st.session_state)
