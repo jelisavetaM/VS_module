@@ -237,7 +237,7 @@ def inputEntered ():
     with header2:
         st.markdown("Data generated for project: **" + st.session_state.text_key + "**.") 
         st.markdown("If you want to change project, just re-enter the number in the inout below and press Enter.")
-	st.markdown("-------------------------------------------------------------------------------------------")
+        st.markdown("-------------------------------------------------------------------------------------------")
 		
 header1 = st.container()
 header2 = st.container()
