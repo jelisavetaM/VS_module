@@ -238,6 +238,7 @@ titles = st.empty()
 def inputEntered ():
     st.markdown("Data generated for project: **" + st.session_state.text_key + "**.") 
     st.markdown("If you want to change project, just re-enter the number in the inout below and press Enter.")
+    titles = st.empty()
     titles = st.title('Hello [usersssssssss]!')
 
 header = st.container()
