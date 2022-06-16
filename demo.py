@@ -233,6 +233,12 @@ def splitEngine(measures, splitScheme, levels):
         st.write(dfAll.astype(str))
     return tables
 
+def inputEntered ():
+    with header2:
+        st.markdown("Data generated for project: **" + st.session_state.text_key + "**.") 
+        st.markdown("If you want to change project, just re-enter the number in the inout below and press Enter.")
+	st.markdown("-------------------------------------------------------------------------------------------")
+		
 header1 = st.container()
 header2 = st.container()
 dataset = st.container()
@@ -241,10 +247,7 @@ with header1:
     titles = st.title('Hello [user]!')
 
 with header2:
-    def inputEntered ():
-        with header2:
-            st.markdown("Data generated for project: **" + st.session_state.text_key + "**.") 
-            st.markdown("If you want to change project, just re-enter the number in the inout below and press Enter.")
+
     proj_number = st.text_input("Enter the project number:", value="", autocomplete="on", placeholder= "7-digit project number (ex. 2022126)", on_change=inputEntered, key='text_key')
 
 
