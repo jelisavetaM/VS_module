@@ -379,7 +379,7 @@ def splitEngine2(measures, splitScheme, levels):
 
 def inputEntered ():
     with header2:
-        st.markdown("<p style='background-color:#033b6e;'>Data generated for project: <b>" + st.session_state.text_key + "</b>. </br> If you want to change project, just re-enter the number in the inout below and press Enter.</p>", unsafe_allow_html=True)
+        st.markdown("<p style='background-color:#033b6e;'>Data generated for project: <b>" + st.session_state.text_key + "</b>. </br> If you want to change project, just re-enter the number in the input below and press Enter.</p>", unsafe_allow_html=True)
         st.markdown("-------------------------------------------------------------------------------------------")
 		
 header1 = st.container()
