@@ -90,6 +90,8 @@ def get_df_with_answer_labels(df,vars_arr):
 
 
 def format_splits(splits):
+    global uuid_and_split
+    
     for lvl in splits:
         splits_short = []
         if lvl == "1":
@@ -98,9 +100,11 @@ def format_splits(splits):
             if split.split("->")[0] not in splits_short:
                 splits_short.append(split.split("->")[0])
         splits[lvl] = splits_short
-
     splits_final = {"1" : splits["1"]}
 
+    uuid_and_split = list(np.concatenate([splits["1"].copy(),splits["2"].copy(),splits["3"].copy()]).flat)#ovde treba flatten za sva 3 nivoa splita
+    uuid_and_split.append("uuid")
+    
     if len(splits["2"]) > 0:
         lvl2 = []
         for s1 in splits["1"]:
@@ -123,7 +127,7 @@ def format_splits(splits):
     else:
         splits_final["3"] = []
 
-    return splits
+    return splits_final
 
 def format_tables(workbook, worksheet, number_of_sheet_rows):
     format_procenti = workbook.add_format({'num_format': '0%'})
@@ -237,6 +241,7 @@ def get_measure_df(measure, level, split):
 	kpi = kpi.reset_index()
 	kpi.rename(columns = {'index':level}, inplace = True)
 	return kpi
+    
 def splitEngine(measures, splitScheme, levels):
     global shoppingMergedData
 
@@ -344,7 +349,9 @@ def splitEngine2(measures, splitScheme, levels):
         arrays = [[],[]]
         # arrays = [
                 # ["bar", "bar", "baz", "baz", "foo", "foo", "qux", "qux"],
+                # ["one", "two", "one", "two", "one", "two", "one", "two"],
                 # ["one", "two", "one", "two", "one", "two", "one", "two"]
+
         # ]
    
         for level in levels:
@@ -356,8 +363,8 @@ def splitEngine2(measures, splitScheme, levels):
                 sp_arr = ["", "", ""]
                 for split in splits:
                     df = get_measure_df(measure,level,split)
+
     
-                    # st.write(df.astype(str))
                     try:
                         df = df[df[level].isin(sublevels)]
                     except:
@@ -368,7 +375,11 @@ def splitEngine2(measures, splitScheme, levels):
                     # st.stop()
                     
                     df.insert(0, 'level', level)
-                    df = df.rename(columns={level: "sublevel","Total" : "Total_" + str(split)})
+                    
+                    split_append = ""
+                    for s in split:
+                        split_append = split_append + s 
+                    df = df.rename(columns={level: "sublevel","Total" : "Total_" + split_append})
                     
                     for x in range(0,(df.shape[1]-2)):
                         sp_arr.append(split)
@@ -377,9 +388,11 @@ def splitEngine2(measures, splitScheme, levels):
                         df.insert(2, 'measurment', measure)
                         df_splits = df
                     else:
+                        # st.write(df.astype(str))
                         df_splits = pd.merge(df_splits, df, how='left', on=["level","sublevel"])
     
                 # st.write(df_splits.astype(str))
+        
     
                 df_by_level = pd.concat([df_by_level,df_splits])
                 if len(arrays[0])==0:
@@ -401,13 +414,13 @@ def splitEngine2(measures, splitScheme, levels):
             
     
     
-        st.write(table)
-        st.stop()
+
         table1 = table.sort_values(by=['level','sublevel','measurment'])
         table1.reset_index(drop=True, inplace=True)
-        # st.write(table1.astype(str))
+        # st.write(table1)
         table2 = table.sort_values(by=['measurment','level','sublevel'])
         table2.reset_index(drop=True, inplace=True)
+
         # st.write(table2.astype(str))
         
         tables = {
@@ -415,46 +428,44 @@ def splitEngine2(measures, splitScheme, levels):
             "by_measure" : table2
         }
     
-    
-        for t in tables:
-            table = tables[t]
-            empty_dic = {}
-            for col in list(table.columns):
-                empty_dic[col] = ["   "]
-            empty_df = pd.DataFrame.from_dict(empty_dic)
-    
-            places_to_insert_empty_df = []
-            already_inserted_empty = 0
-            for i in range(0,len(table)-1):
-                if i > 0 and table["level"][i] != table["level"][i-1]:
-                    places_to_insert_empty_df.append(i+already_inserted_empty)
-                    already_inserted_empty+=1
-    
-            for i in places_to_insert_empty_df:
-                table = pd.concat([table.iloc[:i], empty_df, table.iloc[i:]])
+        if level_number == '1':
+            for t in tables:
+                table = tables[t]
+                empty_dic = {}
+                for col in list(table.columns):
+                    empty_dic[col] = ["   "]
+                empty_df = pd.DataFrame.from_dict(empty_dic)
+        
+                places_to_insert_empty_df = []
+                already_inserted_empty = 0
+                for i in range(0,len(table)-1):
+                    if i > 0 and table["level"][i] != table["level"][i-1]:
+                        places_to_insert_empty_df.append(i+already_inserted_empty)
+                        already_inserted_empty+=1
+        
+                for i in places_to_insert_empty_df:
+                    table = pd.concat([table.iloc[:i], empty_df, table.iloc[i:]])
+                    table.reset_index(drop=True, inplace=True)
+        
+        
+                arrays[1] = list(table.columns)
+                tuples = list(zip(*arrays))
+                multi_column_names = pd.MultiIndex.from_tuples(tuples, names=["Var Name", "Var Label"])
+                
+                table.columns = multi_column_names
                 table.reset_index(drop=True, inplace=True)
-    
-    
-            arrays[1] = list(table.columns)
-            tuples = list(zip(*arrays))
-            multi_column_names = pd.MultiIndex.from_tuples(tuples, names=["Var Name", "Var Label"])
-            
-            table.columns = multi_column_names
-            table.reset_index(drop=True, inplace=True)
-            tables[t] = table
-            # st.write(table.astype(str))
-    
+                tables[t] = table
+
         dfAll_tables[level_number] = tables
         
-        st.write(tables["by_level"].astype(str))
-        st.write(tables["by_measure"].astype(str))
+        # st.write(tables["by_level"].astype(str))
+        # st.write(tables["by_measure"].astype(str))
     st.write(dfAll_tables)
-    st.stop()
     return dfAll_tables
 
 def inputEntered ():
     with header2:
-        st.markdown("<p style='background-color:#033b6e;'>Data generated for project: <b>" + st.session_state.text_key + "</b>. </br> If you want to change project, just re-enter the number in the input below and press Enter.</p>", unsafe_allow_html=True)
+        st.markdown("<p style='background-color:#033b6e; color:white'>Data generated for project: <b>" + st.session_state.text_key + "</b>. </br> If you want to change project, just re-enter the number in the input below and press Enter.</p>", unsafe_allow_html=True)
         st.markdown("-------------------------------------------------------------------------------------------")
 		
 header1 = st.container()
@@ -521,7 +532,7 @@ with dataset:
             if len(splits_long["3"])>0 and len(splits_long["2"])==0:
                 st.error("You can't have split level 3, before you define split level 2!!!")
                 st.stop()
-    
+
         splits_final = format_splits(splits_long)
         
         
@@ -571,10 +582,6 @@ with dataset:
                     sublevels_list.sort()
                     parameters["sublevels"][level] = sublevels_list
     
-        #uuid_and_split = splits_final["1"].copy()
-        uuid_and_split = list(np.concatenate([splits_final["1"].copy(),splits_final["2"].copy(),splits_final["3"].copy()]). flat)#ovde treba flatten za sva 3 nivoa splita
-        uuid_and_split.append("uuid")
-        st.write(uuid_and_split)
         data_survey = get_df_with_answer_labels(surveyFinalData,uuid_and_split)
     
         shoppingMergedData = pd.merge(data_survey, df_vs, how='left', left_on='uuid', right_on='USER ID')
@@ -650,25 +657,27 @@ with dataset:
                 if parameters["measurments"][m]:
                     chosen_measures.append(m)
     
-    
+
             tables = splitEngine2(chosen_measures, splits_final, parameters["sublevels"])
     
             with pd.ExcelWriter("final.xlsx") as writer:
-                for t in tables:
-                    tables[t].to_excel(writer, sheet_name=t)
-                    # format_tables(writer.book, writer.sheets[t], len(tables[t].index) + 3)
+
+                for split_level in tables:
+                    for t in tables[split_level]:
+                        tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
+                        format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
     
-            wb = load_workbook("final.xlsx")
-            ws = wb['by_level']
-            ws.freeze_panes = ws['A4']
-            ws.auto_filter.ref = "A3:AA3"
-            wb.save("final.xlsx")
+            # wb = load_workbook("final.xlsx")
+            # ws = wb['by_level']
+            # ws.freeze_panes = ws['A4']
+            # ws.auto_filter.ref = "A3:AA3"
+            # wb.save("final.xlsx")
     
-            wb = load_workbook("final.xlsx")
-            ws = wb['by_measure']
-            ws.freeze_panes = ws['A4']
-            ws.auto_filter.ref = "A3:AA3"
-            wb.save("final.xlsx")
+            # wb = load_workbook("final.xlsx")
+            # ws = wb['by_measure']
+            # ws.freeze_panes = ws['A4']
+            # ws.auto_filter.ref = "A3:AA3"
+            # wb.save("final.xlsx")
     
     
             with open('final.xlsx', mode = "rb") as f:
