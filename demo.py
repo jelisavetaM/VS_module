@@ -534,9 +534,9 @@ with dataset:
                     #for table in tables_by_measure[level]:
                         #tables_by_measure[level][table].to_excel(writer, sheet_name="by_measure", startrow=startrow_measure, startcol=0, index=True)
                         #startrow_measure = startrow_measure + tables_by_measure[level][table].shape[0] + 5
-		for table_level, table_second in tables_by_measure.items():
-			table_second[level][table].to_excel(writer, sheet_name="by_measure" + table_level, startrow=startrow_measure, startcol=0, index=True)
-			startrow = startrow + table.shape[0] + 5
+                for table_level, table_second in tables_by_measure.items():
+                    table_second[level][table].to_excel(writer, sheet_name="by_measure" + table_level, startrow=startrow_measure, startcol=0, index=True)
+                    startrow = startrow + table.shape[0] + 5
     
     
             wb = load_workbook("final.xlsx")
