@@ -456,7 +456,6 @@ with dataset:
             splits_long["3"] =  st.multiselect("Type to search or just scroll:",questions_label_text, key="splits_lvl3")
             if len(splits_long["3"])>0 and len(splits_long["2"])==0:
                 st.error("You can't have split level 3, before you define split level 2!!!")
-                st.stop()
 		
 		
         def format_splits(splits):
