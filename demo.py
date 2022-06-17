@@ -5,7 +5,7 @@ import numpy as np
 from openpyxl import load_workbook, Workbook
 from urllib.request import urlopen
 import requests, json
-# import xlsxwriter
+import xlsxwriter
 
 
 def style_table(v):
