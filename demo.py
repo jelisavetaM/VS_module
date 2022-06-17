@@ -501,7 +501,6 @@ with dataset:
 		
         splits_final = format_splits(splits_long)
 		
-        st.stop()
     
 
 ####################################################################################
