@@ -600,7 +600,7 @@ with dataset:
                     startrow = startrow + table.shape[0] + 5
                     filled_sheet_length_1+=startrow
     
-                format_tables(writer.book, writer.sheets["by_level"], filled_sheet_length_1)
+                #format_tables(writer.book, writer.sheets["by_level"], filled_sheet_length_1)
     
                 filled_sheet_length_2 = 0
                 startrow_measure = 0
@@ -610,7 +610,7 @@ with dataset:
                         startrow_measure = startrow_measure + tables_by_measure[level][table].shape[0] + 5
                         filled_sheet_length_2+=startrow_measure
     
-                format_tables(writer.book, writer.sheets["by_measure"], filled_sheet_length_2)
+                #format_tables(writer.book, writer.sheets["by_measure"], filled_sheet_length_2)
     
     
     
