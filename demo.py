@@ -566,8 +566,10 @@ with dataset:
                     sublevels_list.sort()
                     parameters["sublevels"][level] = sublevels_list
     
-        uuid_and_split = splits_final["1"].copy()#ovde treba flatten za sva 3 nivoa splita
+        #uuid_and_split = splits_final["1"].copy()
+	uuid_and_split = list(np.concatenate([splits_final["1"].copy(),splits_final["2"].copy(),splits_final["3"].copy()]). flat)#ovde treba flatten za sva 3 nivoa splita
         uuid_and_split.append("uuid")
+	st.write(uuid_and_split)
         data_survey = get_df_with_answer_labels(surveyFinalData,uuid_and_split)
     
         shoppingMergedData = pd.merge(data_survey, df_vs, how='left', left_on='uuid', right_on='USER ID')
