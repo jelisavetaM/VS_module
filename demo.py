@@ -501,8 +501,6 @@ with dataset:
 		
 		
         splits_final = format_splits(splits_long)
-        st.write(parameters["measurments"])
-        st.write(splits)
 		
         st.stop()
     
