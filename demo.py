@@ -174,7 +174,7 @@ def get_measure_df(measure, level, split):
 #######################################################################################################################################################################
 def splitEngine(measures, splitScheme, levels):
     global shoppingMergedData
-        dfAll_dict = {}
+    dfAll_dict = {}
 	for no_levels, splits in splitScheme.items():
 		tables = []
 		tables_by_measure = {}
