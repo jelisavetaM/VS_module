@@ -644,7 +644,7 @@ with dataset:
                     chosen_measures.append(m)
     
     
-            tables = splitEngine2(chosen_measures, splits_short, parameters["sublevels"])
+            tables = splitEngine2(chosen_measures, splits_final["1"], parameters["sublevels"])
     
             with pd.ExcelWriter("final.xlsx") as writer:
                 for t in tables:
