@@ -447,6 +447,8 @@ def splitEngine2(measures, splitScheme, levels):
         
         st.write(tables["by_level"].astype(str))
         st.write(tables["by_measure"].astype(str))
+    st.write(dfAll_tables)
+    st.stop()
     return dfAll_tables
 
 def inputEntered ():
