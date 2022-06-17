@@ -5,7 +5,7 @@ import numpy as np
 from openpyxl import load_workbook, Workbook
 from urllib.request import urlopen
 import requests, json
-import xlsxwriter
+# import xlsxwriter
 
 
 def style_table(v):
@@ -594,7 +594,7 @@ with dataset:
                     startrow = startrow + table.shape[0] + 5
                     filled_sheet_length_1+=startrow
     
-                format_tables(writer.book, writer.sheets["by_level"], filled_sheet_length_1)
+                # format_tables(writer.book, writer.sheets["by_level"], filled_sheet_length_1)
     
                 filled_sheet_length_2 = 0
                 startrow_measure = 0
@@ -604,7 +604,7 @@ with dataset:
                         startrow_measure = startrow_measure + tables_by_measure[level][table].shape[0] + 5
                         filled_sheet_length_2+=startrow_measure
     
-                format_tables(writer.book, writer.sheets["by_measure"], filled_sheet_length_2)
+                # format_tables(writer.book, writer.sheets["by_measure"], filled_sheet_length_2)
     
     
     
@@ -649,7 +649,7 @@ with dataset:
             with pd.ExcelWriter("final.xlsx") as writer:
                 for t in tables:
                     tables[t].to_excel(writer, sheet_name=t)
-                    format_tables(writer.book, writer.sheets[t], len(tables[t].index) + 3)
+                    # format_tables(writer.book, writer.sheets[t], len(tables[t].index) + 3)
     
             wb = load_workbook("final.xlsx")
             ws = wb['by_level']
