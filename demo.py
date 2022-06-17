@@ -427,32 +427,87 @@ with dataset:
         st.sidebar.download_button(label="datamap json", data=str(datamap), file_name="datamap.json",mime='text/csv')
         # st.sidebar.write(datamap)
         # st.stop()
+####################################################################################
         parameters = {}
-        col_measurments,col_splits = st.columns(2)
-        
+        col_measurments, col_splits = st.columns(2)
+		
         with col_measurments:
             st.info("Choose measurments:")
             measurments = ["Consideration on total sample","Penetration on total sample","Total Units","Total Value","Share of Total Units","Share of Total Value","Unit Buy Rate (Units per Buyer)","Value Buy Rate(Value per Buyer)"]
-            
+			
             parameters["measurments"] = {}
-            
+			
             measurments_select_all = st.checkbox("ALL MEASUREMENT")
             for m in measurments:
                 if measurments_select_all:
                     parameters["measurments"][m] = st.checkbox(m, value=True)
                 else:
                     parameters["measurments"][m] = st.checkbox(m)
-        
+		
+        splits_long = {}
         with col_splits:
-            st.info("Add splits:")
-            splits_long =  st.multiselect("Type to search or just scroll:",questions_label_text)
+            st.info("Add splits lvl1:")
+            splits_long["1"] =  st.multiselect("Type to search or just scroll:",questions_label_text, key="splits_lvl1")
+		
+            st.info("Add splits lvl2:")
+            splits_long["2"] =  st.multiselect("Type to search or just scroll:",questions_label_text, key="splits_lvl2")
+		
+            st.info("Add splits lvl3:")
+            splits_long["3"] =  st.multiselect("Type to search or just scroll:",questions_label_text, key="splits_lvl3")
+            if len(splits_long["3"])>0 and len(splits_long["2"])==0:
+                st.error("You can't have split level 3, before you define split level 2!!!")
+                st.stop()
+		
+		
+        def format_splits(splits):
+            for lvl in splits:
+                splits_short = []
+                if lvl == "1":
+                    splits_short.append("CELL")
+                for split in splits[lvl]:
+                    if split.split("->")[0] not in splits_short:
+                        splits_short.append(split.split("->")[0])
+                splits[lvl] = splits_short
+		
+            splits_final = {"1" : splits["1"]}
+		
+            if len(splits["2"]) > 0:
+                lvl2 = []
+                for s1 in splits["1"]:
+                    for s2 in splits["2"]:
+                        if s2!=s1:
+                            lvl2.append([s1,s2])
+                splits_final["2"] = lvl2
+            else:
+                splits_final["2"] = []
+		
+            if len(splits["3"]) > 0:
+                lvl3 = []
+                for lvl2 in splits_final["2"]:
+                    for s3 in splits["3"]:
+                        pom_niz = lvl2.copy()
+                        if s3 not in pom_niz:
+                            pom_niz.append(s3)
+                            lvl3.append(pom_niz)
+                splits_final["3"] = lvl3
+            else:
+                splits_final["3"] = []
+		
+		
+		
+            st.write(splits_final)
+            return splits
+		
+		
+		
+        splits_final = format_splits(splits_long)
+        st.write(parameters["measurments"])
+        st.write(splits)
+		
+        st.stop()
     
-        splits_short = ["CELL"]
-        for split in splits_long:
-            if split.split("->")[0] not in splits_short:
-                splits_short.append(split.split("->")[0])
-    
-        parameters["splits"] = splits_short
+
+####################################################################################
     
     
         col_lev1,col_lev2 = st.columns(2)
