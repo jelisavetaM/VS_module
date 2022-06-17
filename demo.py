@@ -402,7 +402,7 @@ def splitEngine2(measures, splitScheme, levels):
     
     
         st.write(table)
-	st.stop()
+        st.stop()
         table1 = table.sort_values(by=['level','sublevel','measurment'])
         table1.reset_index(drop=True, inplace=True)
         # st.write(table1.astype(str))
