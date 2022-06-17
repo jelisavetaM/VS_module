@@ -1,10 +1,15 @@
 import streamlit as st
 import pandas as pd
+from streamlit_ace import st_ace
 import json 
 import numpy as np
 from openpyxl import load_workbook, Workbook
-from urllib.request import urlopen
-import requests, json	
+
+
+with open('style.css') as f:
+    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
+
 def style_table(v):
     if v < 4:
         return 'color:green;'
@@ -12,21 +17,24 @@ def style_table(v):
         return 'color:red;'
     else:
         return None
-@st.cache(allow_output_mutation=True)
+
+
+@st.cache
 def convert_df(df):
      # IMPORTANT: Cache the conversion to prevent computation on every rerun
      return df.to_csv(index=False)
+
 @st.cache(allow_output_mutation=True)
 def get_survey_data(survey_db):
-    survey_db = 'https://raw.githubusercontent.com/jelisavetaM/VS_module/main/220437.xlsx'
     return pd.read_excel(survey_db)
+
 # @st.cache
-def get_vs_data(vs_db_files):	
+def get_vs_data(vs_db_files):
     df_vs = pd.DataFrame()
-    vs_db_files = ['https://raw.githubusercontent.com/jelisavetaM/VS_module/main/Report%20Products%20-%202022044_vs_cell1.csv','https://raw.githubusercontent.com/jelisavetaM/VS_module/main/Report%20Products%20-%202022044_vs_cell2.csv', 'https://raw.githubusercontent.com/jelisavetaM/VS_module/main/Report%20Products%20-%202022044_vs_cell3.csv']
     for file in vs_db_files:
         df = pd.read_csv(file, delimiter=";" , keep_default_na=False)
         df_vs = df_vs.append(df)
+
     df_vs = df_vs[df_vs['USER ID'] != '']
     df_vs['CONSIDERATIONS'] = np.where(df_vs['CONSIDERATIONS'] == 'NULL', 0, df_vs['CONSIDERATIONS'])
     df_vs['QUANTITY'] = np.where(df_vs['QUANTITY'] == 'NULL', 0, df_vs['QUANTITY'])
@@ -38,18 +46,19 @@ def get_vs_data(vs_db_files):
     #trenutno, dok se ne vidi sta je bug sa money spent na VS platformi
     df_vs = df_vs[ (df_vs['PENETRATION_BINARY'] == 1) & (df_vs['MONEY SPENT'] != 'NO SHOPPING') ]
     df_vs = df_vs.astype({'MONEY SPENT':'float', 'PRICE':'float'})
+
     # st.write(df_vs)
     return df_vs
-@st.cache(allow_output_mutation=True)
+
+
+
+
+
+@st.cache
 def get_datamap(datamap_json_file):
     datamap = {}
     questions_label_text = []
-    #datamap_json = json.load(datamap_json_file)
-    url = requests.get("https://raw.githubusercontent.com/jelisavetaM/VS_module/main/datamap.json")
-    text = url.text
-    datamap_json = json.loads(text)
-    #response = urlopen("https://github.com/jelisavetaM/VS_module/blob/main/datamap.json")
-    #datamap_json = json.loads(response.read())
+    datamap_json = json.load(datamap_json_file)
     for var in datamap_json["variables"]:
         q_title = var["label"]
         answers = {}
@@ -59,6 +68,7 @@ def get_datamap(datamap_json_file):
         elif "values" in var:
             for val in var["values"]:
                 answers[val["value"]] = val["title"]
+
         q_json = {
             "text" : var["title"],
             "type" : var["type"],
@@ -68,8 +78,10 @@ def get_datamap(datamap_json_file):
         }
         datamap[q_title] = q_json
         questions_label_text.append(q_title + "->" + var["title"])
-    return [datamap,questions_label_text]   
-@st.cache(allow_output_mutation=True)
+
+    return [datamap,questions_label_text]
+
+@st.cache
 def get_df_with_answer_labels(df,vars_arr):
     global datamap
     if vars_arr == "ALL":
@@ -84,6 +96,7 @@ def get_df_with_answer_labels(df,vars_arr):
                 df_return[col] = df_return[col].replace(lab, datamap[col]["answers"][lab])
     
     return df_return
+
 def get_measure_df(measure, level, split):
 	global shoppingMergedData, data_survey
 	definition = {
@@ -147,6 +160,7 @@ def get_measure_df(measure, level, split):
 		'aggfunction' : "sum",
 		'base' : 1}
 	}
+
 	# st.write(shoppingMergedData)
 	# st.stop()
 	if measure == "Total Units" or measure == "Total Value" or measure == "Unit Buy Rate (Units per Buyer)" or measure == "Value Buy Rate (Units per Buyer)":
@@ -167,6 +181,9 @@ def get_measure_df(measure, level, split):
 	kpi = kpi.reset_index()
 	kpi.rename(columns = {'index':level}, inplace = True)
 	return kpi
+
+
+#v1
 def splitEngine(measures, splitScheme, levels):
     global shoppingMergedData
 
@@ -377,252 +394,304 @@ def splitEngine2(measures, splitScheme, levels):
     st.write(tables["by_measure"].astype(str))
     return tables
 
-def inputEntered ():
-    with header2:
-        st.markdown("<p style='background-color:#033b6e;'>Data generated for project: <b>" + st.session_state.text_key + "</b>. </br> If you want to change project, just re-enter the number in the input below and press Enter.</p>", unsafe_allow_html=True)
-        st.markdown("-------------------------------------------------------------------------------------------")
-		
-header1 = st.container()
-header2 = st.container()
+
+
+
+
+header = st.container()
 dataset = st.container()
 
-with header1:
-    titles = st.title('Hello [user]!')
-
-with header2:
-
-    proj_number = st.text_input("Enter the project number:", value="", autocomplete="on", placeholder= "7-digit project number (ex. 2022126)", on_change=inputEntered, key='text_key')
-
+with header:
+    st.title('Download')
 
 with dataset:
+
     # st.write(st.session_state)
-    #file uploaders
-    #survey_db = st.file_uploader('Upload Survey Database:', type=None, accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False)
-    #vs_db_files = st.file_uploader('Upload VS Database:', type=None, accept_multiple_files=True, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False)
-    #datamap_json_file = st.file_uploader('Upload JSON Datamap:', type=None, accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False)
-    #if survey_db is None or datamap_json_file is None or len(vs_db_files)==0:#ovde dodaj i uslov za VS
-    if proj_number:
-        dataset.empty()
-        #datamap to formated json
-        dm_json = get_datamap("datamap_json_file")
-        datamap = dm_json[0]
-        questions_label_text = dm_json[1]
-        #Survey data
-        surveyFinalData = get_survey_data("survey_db")
-        #VS database
-        df_vs = get_vs_data("vs_db_files")
-        # st.write(df_vs)
-        #splits
-        st.sidebar.write(pd.DataFrame(questions_label_text, index=None, columns=["questions"]))
-        st.sidebar.download_button(label="datamap json", data=str(datamap), file_name="datamap.json",mime='text/csv')
-        # st.sidebar.write(datamap)
-        # st.stop()
-        parameters = {}
-        col_measurments,col_splits = st.columns(2)
+
+    #direkt ucitavanje
+    with open(r"C:\Users\ivan.r\Desktop\Projects\Decipher\demo\220437.xlsx", 'rb') as f1:
+        surveyFinalData = get_survey_data(f1)
+    with open(r"C:\Users\ivan.r\Desktop\Projects\Decipher\demo\datamap.json", 'rb') as f2:
+        dm_json = get_datamap(f2)
+    with open(r"C:\Users\ivan.r\Desktop\Projects\Decipher\demo\Report Products - 2022044_vs_cell1.csv", 'rb') as a1, open(r"C:\Users\ivan.r\Desktop\Projects\Decipher\demo\Report Products - 2022044_vs_cell2.csv", 'rb') as a2, open(r"C:\Users\ivan.r\Desktop\Projects\Decipher\demo\Report Products - 2022044_vs_cell3.csv", 'rb') as a3:
+        df_vs = get_vs_data([a1,a2,a3])
+
+
+
+    datamap = dm_json[0]
+    questions_label_text = dm_json[1]
+
+    #splits
+    st.sidebar.write(pd.DataFrame(questions_label_text, index=None, columns=["questions"]))
+    st.sidebar.download_button(label="datamap json", data=str(datamap), file_name="datamap.json",mime='text/csv')
+    # st.sidebar.write(datamap)
+    # st.stop()
+
+    #ODAVDE
+    parameters = {}
+    col_measurments, col_splits = st.columns(2)
+
+    with col_measurments:
+        st.info("Choose measurments:")
+        measurments = ["Consideration on total sample","Penetration on total sample","Total Units","Total Value","Share of Total Units","Share of Total Value","Unit Buy Rate (Units per Buyer)","Value Buy Rate(Value per Buyer)"]
         
-        with col_measurments:
-            st.info("Choose measurments:")
-            measurments = ["Consideration on total sample","Penetration on total sample","Total Units","Total Value","Share of Total Units","Share of Total Value","Unit Buy Rate (Units per Buyer)","Value Buy Rate(Value per Buyer)"]
-            
-            parameters["measurments"] = {}
-            
-            measurments_select_all = st.checkbox("ALL MEASUREMENT")
-            for m in measurments:
-                if measurments_select_all:
-                    parameters["measurments"][m] = st.checkbox(m, value=True)
+        parameters["measurments"] = {}
+        
+        measurments_select_all = st.checkbox("ALL MEASUREMENT")
+        for m in measurments:
+            if measurments_select_all:
+                parameters["measurments"][m] = st.checkbox(m, value=True)
+            else:
+                parameters["measurments"][m] = st.checkbox(m)
+
+    splits_long = {}
+    with col_splits:
+        st.info("Add splits lvl1:")
+        splits_long["1"] =  st.multiselect("Type to search or just scroll:",questions_label_text, key="splits_lvl1")
+
+        st.info("Add splits lvl2:")
+        splits_long["2"] =  st.multiselect("Type to search or just scroll:",questions_label_text, key="splits_lvl2")
+
+        st.info("Add splits lvl3:")
+        splits_long["3"] =  st.multiselect("Type to search or just scroll:",questions_label_text, key="splits_lvl3")
+        if len(splits_long["3"])>0 and len(splits_long["2"])==0:
+            st.error("You can't have split level 3, before you define split level 2!!!")
+            st.stop()
+    
+
+    def format_splits(splits):
+        for lvl in splits:
+            splits_short = []
+            if lvl == "1":
+                splits_short.append("CELL")
+            for split in splits[lvl]:
+                if split.split("->")[0] not in splits_short:
+                    splits_short.append(split.split("->")[0])
+            splits[lvl] = splits_short
+
+        splits_final = {"1" : splits["1"]}
+
+        if len(splits["2"]) > 0:
+            lvl2 = []
+            for s1 in splits["1"]:
+                for s2 in splits["2"]:
+                    if s2!=s1:
+                        lvl2.append([s1,s2])
+            splits_final["2"] = lvl2
+        else:
+            splits_final["2"] = []
+
+        if len(splits["3"]) > 0:
+            lvl3 = []
+            for lvl2 in splits_final["2"]:
+                for s3 in splits["3"]:
+                    pom_niz = lvl2.copy()
+                    if s3 not in pom_niz:
+                        pom_niz.append(s3)
+                        lvl3.append(pom_niz)
+            splits_final["3"] = lvl3
+        else:
+            splits_final["3"] = []
+
+
+
+        st.write(splits_final)
+        return splits
+
+
+
+    splits_final = format_splits(splits_long)
+    st.write(parameters["measurments"])
+    st.write(splits)
+
+    st.stop()
+    #DOVDE
+
+
+
+
+
+
+
+
+    col_lev1,col_lev2 = st.columns(2)
+
+    with col_lev1:
+        st.info("Choose levels:")
+        levels = ["SKU","BRAND","SUBBRAND","PRODUCT CATEGORY","PURPOSE","CLIENT","UNIT OF MEASUREMENT","SHELF","KPI1","KPI2","KPI3","KPI4","KPI5","PRODUCT DESCRIPTION 1","PRODUCT DESCRIPTION 2","PRODUCT DESCRIPTION 3","Custom attribute levels"]
+        
+        parameters["levels"] = {}
+        
+        temporarly_disabled_levels = ["KPI1","KPI2"]
+        
+        levels_select_all = st.checkbox("ALL LEVELS")
+        for level in levels:
+            if level in df_vs.columns:
+                if ( len(list(df_vs[level].unique()))==1 and list(df_vs[level].unique())[0]=="NOT DEFINED" ) or level in temporarly_disabled_levels:
+                    parameters["levels"][level] = st.checkbox(level, disabled=True, key="lvl_"+level)
+                elif levels_select_all:
+                    parameters["levels"][level] = st.checkbox(level, value=True, key="lvl_"+level)
                 else:
-                    parameters["measurments"][m] = st.checkbox(m)
-        
-        with col_splits:
-            st.info("Add splits:")
-            splits_long =  st.multiselect("Type to search or just scroll:",questions_label_text)
-    
-        splits_short = ["CELL"]
-        for split in splits_long:
-            if split.split("->")[0] not in splits_short:
-                splits_short.append(split.split("->")[0])
-    
-        parameters["splits"] = splits_short
-    
-    
-        col_lev1,col_lev2 = st.columns(2)
-    
-        with col_lev1:
-            st.info("Choose levels:")
-            levels = ["SKU","BRAND","SUBBRAND","PRODUCT CATEGORY","PURPOSE","CLIENT","UNIT OF MEASUREMENT","SHELF","KPI1","KPI2","KPI3","KPI4","KPI5","PRODUCT DESCRIPTION 1","PRODUCT DESCRIPTION 2","PRODUCT DESCRIPTION 3","Custom attribute levels"]
-            
-            parameters["levels"] = {}
-            
-            temporarly_disabled_levels = ["KPI1","KPI2"]
-            
-            levels_select_all = st.checkbox("ALL LEVELS")
-            for level in levels:
-                if level in df_vs.columns:
-                    if ( len(list(df_vs[level].unique()))==1 and list(df_vs[level].unique())[0]=="NOT DEFINED" ) or level in temporarly_disabled_levels:
-                        parameters["levels"][level] = st.checkbox(level, disabled=True, key="lvl_"+level)
-                    elif levels_select_all:
-                        parameters["levels"][level] = st.checkbox(level, value=True, key="lvl_"+level)
-                    else:
-                        parameters["levels"][level] = st.checkbox(level, key="lvl_"+level)
-    
-        with col_lev2:
-            parameters["sublevels"] = {}
-    
-            if not levels_select_all:
-                for level in parameters["levels"]:
-                    if parameters["levels"][level]==True:
-                        st.info(level)
-                        sublevels_select_all = st.checkbox("Select all", key="sh_" + level, value = True)
-                        
-                        sublevels_list = list(df_vs[level].unique())
-                        sublevels_list.sort()
-                        if "NOT DEFINED" in sublevels_list:
-                            sublevels_list.remove("NOT DEFINED")
-                            sublevels_list.append("NOT DEFINED")
-    
-                        if not sublevels_select_all:
-                            parameters["sublevels"][level] = st.multiselect("Type to search or just scroll:",sublevels_list, key="sublevel_"+str(level))
-                        elif sublevels_select_all:
-                            parameters["sublevels"][level] = sublevels_list
-                        
-            elif levels_select_all:
-                for level in parameters["levels"]:
+                    parameters["levels"][level] = st.checkbox(level, key="lvl_"+level)
+
+    with col_lev2:
+        parameters["sublevels"] = {}
+
+        if not levels_select_all:
+            for level in parameters["levels"]:
+                if parameters["levels"][level]==True:
+                    st.info(level)
+                    sublevels_select_all = st.checkbox("Select all", key="sh_" + level, value = True)
+                    
                     sublevels_list = list(df_vs[level].unique())
                     sublevels_list.sort()
-                    parameters["sublevels"][level] = sublevels_list
-    
-        uuid_and_split = splits_short.copy()
-        uuid_and_split.append("uuid")
-        data_survey = get_df_with_answer_labels(surveyFinalData,uuid_and_split)
-    
-        shoppingMergedData = pd.merge(data_survey, df_vs, how='left', left_on='uuid', right_on='USER ID')
-    
-        #STARO
-        if st.button("Run calculations - V1"):
-            chosen_measures = []
-            for m in parameters["measurments"]:
-                if parameters["measurments"][m]:
-                    chosen_measures.append(m)
-    
-    
-            tables_arr = splitEngine(chosen_measures, splits_short, parameters["sublevels"])
-    
-            tables = tables_arr[0]
-            tables_by_measure = tables_arr[1]
-    
-    
-            with pd.ExcelWriter("final.xlsx") as writer:
-                startrow = 0
-                for table in tables:
-                    table.to_excel(writer, sheet_name="by_level", startrow=startrow, startcol=0, index=True)
-                    startrow = startrow + table.shape[0] + 5
-    
-                startrow_measure = 0
-                for level in tables_by_measure:
-                    for table in tables_by_measure[level]:
-                        tables_by_measure[level][table].to_excel(writer, sheet_name="by_measure", startrow=startrow_measure, startcol=0, index=True)
-                        startrow_measure = startrow_measure + tables_by_measure[level][table].shape[0] + 5
-    
-    
-            wb = load_workbook("final.xlsx")
-    
-            ws = wb['by_level']
-            row_reduced_height = []
-            for row in ws.iter_rows():
-                if not any(cell.value for cell in row):
-                    # ws.delete_rows(row[0].row)
-                    if row[0].row - 1 not in row_reduced_height:
-                        ws.row_dimensions[row[0].row].height = 0.5
-                        row_reduced_height.append(row[0].row)
-    
-            ws = wb['by_measure']
-            row_reduced_height = []
-            for row in ws.iter_rows():
-                if not any(cell.value for cell in row):
-                    # ws.delete_rows(row[0].row)
-                    if row[0].row - 1 not in row_reduced_height:
-                        ws.row_dimensions[row[0].row].height = 0.5
-                        row_reduced_height.append(row[0].row)
-    
-            wb.save("final.xlsx")
-    
-                
-            with open('final.xlsx', mode = "rb") as f:
-                st.download_button('Generate Excel Export', f, file_name= 'Export_' + st.session_state.text_key + '_version_1.xlsx')
-    
-    
-    
-        #NOVO
-        if st.button("Run calculations - V2"):
-            chosen_measures = []
-            for m in parameters["measurments"]:
-                if parameters["measurments"][m]:
-                    chosen_measures.append(m)
-    
-    
-            tables = splitEngine2(chosen_measures, splits_short, parameters["sublevels"])
-    
-            with pd.ExcelWriter("final.xlsx") as writer:
-                for t in tables:
-                    tables[t].to_excel(writer, sheet_name=t)
-    
-    
-            wb = load_workbook("final.xlsx")
-            ws = wb['by_level']
-            ws.freeze_panes = ws['A4']
-            ws.auto_filter.ref = "A3:AA3"
-            wb.save("final.xlsx")
-    
-            wb = load_workbook("final.xlsx")
-            ws = wb['by_measure']
-            ws.freeze_panes = ws['A4']
-            ws.auto_filter.ref = "A3:AA3"
-            wb.save("final.xlsx")
-    
-    
-            with open('final.xlsx', mode = "rb") as f:
-                st.download_button('Generate Excel Export', f, file_name= 'Export_' + st.session_state.text_key + '_version_1.xlsx')
-    
-        st.stop()
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        df = get_df_with_answer_labels(surveyFinalData,"ALL")#ili moze ceo df da prebaci u labele
-    
-    
-        ctb1 = pd.crosstab(df['CELL'], df['GENDER'], normalize='columns', margins = True).mul(100).round(0)
-        ctb1.index.name = "CELLxGENDER"
-        ctb1 = ctb1.style.applymap(style_table)
-    
-        ctb2 = pd.crosstab(df['CELL'], df['AGE_CATEGORY'], normalize='columns', margins = True).mul(100).round(0)
-        ctb2.index.name = "CELLxAGE_CATEGORY"
-        ctb2 = ctb2.style.applymap(style_table)
-    
-        st.write(ctb1.index.name)
-        st.dataframe(ctb1)
-    
-        st.write(ctb2.index.name)
-        st.dataframe(ctb2)
-    
-        hyperlinks = ['=HYPERLINK("#tables!A1",tables!A1)','=HYPERLINK("#tables!A7",tables!A7)']
-        df_hyperlinks = pd.DataFrame(columns = ['hyperlinks'], data =  hyperlinks)
-    
-        # st.write(df_hyperlinks)
+                    if "NOT DEFINED" in sublevels_list:
+                        sublevels_list.remove("NOT DEFINED")
+                        sublevels_list.append("NOT DEFINED")
+
+                    if not sublevels_select_all:
+                        parameters["sublevels"][level] = st.multiselect("Type to search or just scroll:",sublevels_list, key="sublevel_"+str(level))
+                    elif sublevels_select_all:
+                        parameters["sublevels"][level] = sublevels_list
+                    
+        elif levels_select_all:
+            for level in parameters["levels"]:
+                sublevels_list = list(df_vs[level].unique())
+                sublevels_list.sort()
+                parameters["sublevels"][level] = sublevels_list
+
+    uuid_and_split = splits_short.copy()
+    uuid_and_split.append("uuid")
+    data_survey = get_df_with_answer_labels(surveyFinalData,uuid_and_split)
+
+    shoppingMergedData = pd.merge(data_survey, df_vs, how='left', left_on='uuid', right_on='USER ID')
+
+    #STARO
+    if st.button("CALC V1"):
+        chosen_measures = []
+        for m in parameters["measurments"]:
+            if parameters["measurments"][m]:
+                chosen_measures.append(m)
+
+
+        tables_arr = splitEngine(chosen_measures, splits_short, parameters["sublevels"])
+
+        tables = tables_arr[0]
+        tables_by_measure = tables_arr[1]
+
+
         with pd.ExcelWriter("final.xlsx") as writer:
-            df_hyperlinks.to_excel(writer, sheet_name="hyperlinks", index=None)
-            ctb1.to_excel(writer, sheet_name="tables")
-            ctb2.to_excel(writer, sheet_name="tables", startrow=ctb1.data.shape[0] + 3, startcol=0)
+            startrow = 0
+            for table in tables:
+                table.to_excel(writer, sheet_name="by_level", startrow=startrow, startcol=0, index=True)
+                startrow = startrow + table.shape[0] + 5
+
+            startrow_measure = 0
+            for level in tables_by_measure:
+                for table in tables_by_measure[level]:
+                    tables_by_measure[level][table].to_excel(writer, sheet_name="by_measure", startrow=startrow_measure, startcol=0, index=True)
+                    startrow_measure = startrow_measure + tables_by_measure[level][table].shape[0] + 5
+
+
+        wb = load_workbook("final.xlsx")
+
+        ws = wb['by_level']
+        row_reduced_height = []
+        for row in ws.iter_rows():
+            if not any(cell.value for cell in row):
+                # ws.delete_rows(row[0].row)
+                if row[0].row - 1 not in row_reduced_height:
+                    ws.row_dimensions[row[0].row].height = 0.5
+                    row_reduced_height.append(row[0].row)
+
+        ws = wb['by_measure']
+        row_reduced_height = []
+        for row in ws.iter_rows():
+            if not any(cell.value for cell in row):
+                # ws.delete_rows(row[0].row)
+                if row[0].row - 1 not in row_reduced_height:
+                    ws.row_dimensions[row[0].row].height = 0.5
+                    row_reduced_height.append(row[0].row)
+
+        wb.save("final.xlsx")
+
             
-    
         with open('final.xlsx', mode = "rb") as f:
             st.download_button('Data Formated', f, file_name='final.xlsx')
+
+
+
+    #NOVO
+    if st.button("CALC V2"):
+        chosen_measures = []
+        for m in parameters["measurments"]:
+            if parameters["measurments"][m]:
+                chosen_measures.append(m)
+
+
+        tables = splitEngine2(chosen_measures, splits_short, parameters["sublevels"])
+
+        with pd.ExcelWriter("final.xlsx") as writer:
+            for t in tables:
+                tables[t].to_excel(writer, sheet_name=t)
+
+
+        wb = load_workbook("final.xlsx")
+        ws = wb['by_level']
+        ws.freeze_panes = ws['A4']
+        ws.auto_filter.ref = "A3:AA3"
+        wb.save("final.xlsx")
+
+        wb = load_workbook("final.xlsx")
+        ws = wb['by_measure']
+        ws.freeze_panes = ws['A4']
+        ws.auto_filter.ref = "A3:AA3"
+        wb.save("final.xlsx")
+
+
+        with open('final.xlsx', mode = "rb") as f:
+            st.download_button('Data Formated', f, file_name='final.xlsx')
+
+    st.stop()
+
+
+
+
+
+
+
+
+
+
+
+
+
+    df = get_df_with_answer_labels(surveyFinalData,"ALL")#ili moze ceo df da prebaci u labele
+
+
+    ctb1 = pd.crosstab(df['CELL'], df['GENDER'], normalize='columns', margins = True).mul(100).round(0)
+    ctb1.index.name = "CELLxGENDER"
+    ctb1 = ctb1.style.applymap(style_table)
+
+    ctb2 = pd.crosstab(df['CELL'], df['AGE_CATEGORY'], normalize='columns', margins = True).mul(100).round(0)
+    ctb2.index.name = "CELLxAGE_CATEGORY"
+    ctb2 = ctb2.style.applymap(style_table)
+
+    st.write(ctb1.index.name)
+    st.dataframe(ctb1)
+
+    st.write(ctb2.index.name)
+    st.dataframe(ctb2)
+
+    hyperlinks = ['=HYPERLINK("#tables!A1",tables!A1)','=HYPERLINK("#tables!A7",tables!A7)']
+    df_hyperlinks = pd.DataFrame(columns = ['hyperlinks'], data =  hyperlinks)
+
+    # st.write(df_hyperlinks)
+    with pd.ExcelWriter("final.xlsx") as writer:
+        df_hyperlinks.to_excel(writer, sheet_name="hyperlinks", index=None)
+        ctb1.to_excel(writer, sheet_name="tables")
+        ctb2.to_excel(writer, sheet_name="tables", startrow=ctb1.data.shape[0] + 3, startcol=0)
+        
+
+    with open('final.xlsx', mode = "rb") as f:
+        st.download_button('Data Formated', f, file_name='final.xlsx')
