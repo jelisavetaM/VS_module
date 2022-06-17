@@ -529,8 +529,6 @@ with dataset:
                 for table_level, table in tables.items():
                 	table.to_excel(writer, sheet_name=table_level, startrow=startrow, startcol=0, index=True)
                 	startrow = startrow + table.shape[0] + 5
-					
-    
                 startrow_measure = 0
                 #for level in tables_by_measure:
                     #for table in tables_by_measure[level]:
