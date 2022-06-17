@@ -181,10 +181,6 @@ def splitEngine(measures, splitScheme, levels):
 		arrays_by_measure = [[],[]]
 		for level in levels:
 			dfAll = pd.DataFrame()
-			# arrays = [
-					# ["bar", "bar", "baz", "baz", "foo", "foo", "qux", "qux"],
-					# ["one", "two", "one", "two", "one", "two", "one", "two"]
-			# ]
 			arrays = [[],[]]
 			
 			sublevels = levels[level]
