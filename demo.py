@@ -175,6 +175,76 @@ def get_measure_df(measure, level, split):
 def splitEngine(measures, splitScheme, levels):
     global shoppingMergedData
     dfAll_dict = {}
+    for no_levels, splits in splitScheme.items():
+        tables = []
+        tables_by_measure = {}
+		arrays_by_measure = [[],[]]
+		for level in levels:
+			dfAll = pd.DataFrame()
+			# arrays = [
+					# ["bar", "bar", "baz", "baz", "foo", "foo", "qux", "qux"],
+					# ["one", "two", "one", "two", "one", "two", "one", "two"]
+			# ]
+			arrays = [[],[]]
+			
+			sublevels = levels[level]
+	
+			if level not in tables_by_measure:
+				tables_by_measure[level] = {}
+	
+			for measure in measures:
+				df_splits = pd.DataFrame()
+				sp_arr = ["", "", ""]
+				for split in splits:
+					df = get_measure_df(measure,level,split)
+	
+					# st.write(df.astype(str))
+					try:
+						df = df[df[level].isin(sublevels)]
+					except:
+						st.error("Calculation get_measure_df failed for measure: " + measure)
+						st.write(df.astype(str))
+						st.stop()
+					
+					# st.stop()
+					
+					df.insert(0, 'level', level)
+					df = df.rename(columns={level: "sublevel","Total" : "Total_" + str(split)})
+					
+					for x in range(0,(df.shape[1]-2)):
+						sp_arr.append(split)
+					
+					if df_splits.empty:
+						df.insert(2, 'measurment', measure)
+						df_splits = df
+					else:
+						df_splits = pd.merge(df_splits, df, how='left', on=["level","sublevel"])
+	
+				# st.write(df_splits.astype(str))
+	
+				dfAll = pd.concat([dfAll,df_splits])
+				if len(arrays[0])==0:
+					arrays[0] = sp_arr
+				if len(arrays_by_measure[0])==0:
+					arrays_by_measure[0] = sp_arr
+	
+				if measure not in tables_by_measure[level]:
+					tables_by_measure[level][measure] = pd.DataFrame()
+				
+				try:
+					tables_by_measure[level][measure] = pd.concat([tables_by_measure[level][measure], df_splits])
+				except:
+					st.write("aaaaaaaaaaaaa")
+					st.write(tables_by_measure[measure])
+					st.write(df_splits)
+					st.stop()
+				
+	
+			dfAll = dfAll.sort_values(by=['sublevel'])
+			
+def splitEngine(measures, splitScheme, levels):
+    global shoppingMergedData
+	dfAll_dict = {}
 	for no_levels, splits in splitScheme.items():
 		tables = []
 		tables_by_measure = {}
