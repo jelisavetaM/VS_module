@@ -4,7 +4,7 @@ import json
 import numpy as np
 from openpyxl import load_workbook, Workbook
 from urllib.request import urlopen
-import requests, json	
+import requests, json
 def style_table(v):
     if v < 4:
         return 'color:green;'
@@ -21,7 +21,7 @@ def get_survey_data(survey_db):
     survey_db = 'https://raw.githubusercontent.com/jelisavetaM/VS_module/main/220437.xlsx'
     return pd.read_excel(survey_db)
 # @st.cache
-def get_vs_data(vs_db_files):	
+def get_vs_data(vs_db_files):
     df_vs = pd.DataFrame()
     vs_db_files = ['https://raw.githubusercontent.com/jelisavetaM/VS_module/main/Report%20Products%20-%202022044_vs_cell1.csv','https://raw.githubusercontent.com/jelisavetaM/VS_module/main/Report%20Products%20-%202022044_vs_cell2.csv', 'https://raw.githubusercontent.com/jelisavetaM/VS_module/main/Report%20Products%20-%202022044_vs_cell3.csv']
     for file in vs_db_files:
@@ -84,6 +84,71 @@ def get_df_with_answer_labels(df,vars_arr):
                 df_return[col] = df_return[col].replace(lab, datamap[col]["answers"][lab])
     
     return df_return
+
+
+def format_splits(splits):
+    for lvl in splits:
+        splits_short = []
+        if lvl == "1":
+            splits_short.append("CELL")
+        for split in splits[lvl]:
+            if split.split("->")[0] not in splits_short:
+                splits_short.append(split.split("->")[0])
+        splits[lvl] = splits_short
+
+    splits_final = {"1" : splits["1"]}
+
+    if len(splits["2"]) > 0:
+        lvl2 = []
+        for s1 in splits["1"]:
+            for s2 in splits["2"]:
+                if s2!=s1:
+                    lvl2.append([s1,s2])
+        splits_final["2"] = lvl2
+    else:
+        splits_final["2"] = []
+
+    if len(splits["3"]) > 0:
+        lvl3 = []
+        for lvl2 in splits_final["2"]:
+            for s3 in splits["3"]:
+                pom_niz = lvl2.copy()
+                if s3 not in pom_niz:
+                    pom_niz.append(s3)
+                    lvl3.append(pom_niz)
+        splits_final["3"] = lvl3
+    else:
+        splits_final["3"] = []
+
+    return splits
+
+def format_tables(workbook, worksheet, number_of_sheet_rows):
+    format_procenti = workbook.add_format({'num_format': '0%'})
+
+
+    worksheet.conditional_format("$B$1:$QQ$%d" % (number_of_sheet_rows),
+                                {"type": "formula",
+                                "criteria": '=INDIRECT("D"&ROW())="Penetration on total sample" ',
+                                "format": format_procenti
+                                })
+    worksheet.conditional_format("$B$1:$QQ$%d" % (number_of_sheet_rows),
+                                {"type": "formula",
+                                "criteria": '=INDIRECT("D"&ROW())="Consideration on total sample"',
+                                "format": format_procenti
+                                })
+    worksheet.conditional_format("$B$1:$QQ$%d" % (number_of_sheet_rows),
+                                {"type": "formula",
+                                "criteria": '=INDIRECT("D"&ROW())="Share of Total Units"',
+                                "format": format_procenti
+                                })
+    worksheet.conditional_format("$B$1:$QQ$%d" % (number_of_sheet_rows),
+                                {"type": "formula",
+                                "criteria": '=INDIRECT("D"&ROW())="Share of Total Value"',
+                                "format": format_procenti
+                                })
+
+
+
 def get_measure_df(measure, level, split):
 	global shoppingMergedData, data_survey
 	definition = {
@@ -152,14 +217,16 @@ def get_measure_df(measure, level, split):
 	if measure == "Total Units" or measure == "Total Value" or measure == "Unit Buy Rate (Units per Buyer)" or measure == "Value Buy Rate (Units per Buyer)":
 		kpi = shoppingMergedData[shoppingMergedData[definition[measure]['filters']] == 1].pivot_table(definition[measure]['data'], index=level, columns=split, aggfunc=definition[measure]['aggfunction'],  margins=True, margins_name='Total').fillna(0).round(0)
 	elif measure == "Share of Total Units" or measure == "Share of Total Value":
-		kpiTemp = shoppingMergedData[shoppingMergedData[definition[measure]['filters']] == 1].pivot_table(definition[measure]['data'], index=level, columns=split, aggfunc=definition[measure]['aggfunction'],  margins=False, margins_name='Total')
-		kpi = ((kpiTemp/kpiTemp.sum())*100).fillna(0).round(0).astype(int).astype(str) + '%'
+		kpiTemp = shoppingMergedData[shoppingMergedData[definition[measure]['filters']] == 1].pivot_table(definition[measure]['data'], index=level, columns=split, aggfunc=definition[measure]['aggfunction'],  margins=True, margins_name='Total')
+		kpi = (kpiTemp/kpiTemp.sum()).fillna(0).round(4)
+		# kpi = ((kpiTemp/kpiTemp.sum())*100).fillna(0).round(0).astype(int).astype(str) + '%'
 	else:
 		kpi = shoppingMergedData.pivot_table(definition[measure]['data'], index=level, columns=split, aggfunc=definition[measure]['aggfunction'],  margins=True, margins_name='Total')
 		sampleSizes = data_survey[split].value_counts()
 		sampleSizes['Total'] = sampleSizes.sum()
 		if measure != "Unit Buy Rate (Units per Buyer)" and measure != "Value Buy Rate (UnitsValue per Buyer)":
-			kpi = ((kpi.div(sampleSizes))*100).fillna(0).round(0).astype(int).astype(str) + '%'
+			kpi = kpi.div(sampleSizes).fillna(0).round(4)
+			# kpi = ((kpi.div(sampleSizes))*100).fillna(0).round(0).astype(int).astype(str) + '%'
 		N = pd.DataFrame(data = [sampleSizes], index = ['Sample size'], columns=kpi.columns)
 		kpi = pd.concat([N, kpi])
 	
@@ -432,19 +499,24 @@ with dataset:
                     parameters["measurments"][m] = st.checkbox(m, value=True)
                 else:
                     parameters["measurments"][m] = st.checkbox(m)
-        
+
+        splits_long = {}
         with col_splits:
-            st.info("Add splits:")
-            splits_long =  st.multiselect("Type to search or just scroll:",questions_label_text)
+            st.info("Add splits lvl1:")
+            splits_long["1"] =  st.multiselect("Type to search or just scroll:",questions_label_text, key="splits_lvl1")
+
+            st.info("Add splits lvl2:")
+            splits_long["2"] =  st.multiselect("Type to search or just scroll:",questions_label_text, key="splits_lvl2")
+
+            st.info("Add splits lvl3:")
+            splits_long["3"] =  st.multiselect("Type to search or just scroll:",questions_label_text, key="splits_lvl3")
+            if len(splits_long["3"])>0 and len(splits_long["2"])==0:
+                st.error("You can't have split level 3, before you define split level 2!!!")
+                st.stop()
     
-        splits_short = ["CELL"]
-        for split in splits_long:
-            if split.split("->")[0] not in splits_short:
-                splits_short.append(split.split("->")[0])
-    
-        parameters["splits"] = splits_short
-    
-    
+        splits_final = format_splits(splits_long)
+        
+        
         col_lev1,col_lev2 = st.columns(2)
     
         with col_lev1:
@@ -491,7 +563,7 @@ with dataset:
                     sublevels_list.sort()
                     parameters["sublevels"][level] = sublevels_list
     
-        uuid_and_split = splits_short.copy()
+        uuid_and_split = splits_final["1"].copy()#ovde treba flatten za sva 3 nivoa splita
         uuid_and_split.append("uuid")
         data_survey = get_df_with_answer_labels(surveyFinalData,uuid_and_split)
     
@@ -505,23 +577,32 @@ with dataset:
                     chosen_measures.append(m)
     
     
-            tables_arr = splitEngine(chosen_measures, splits_short, parameters["sublevels"])
+            tables_arr = splitEngine(chosen_measures, splits_final["1"], parameters["sublevels"])
     
             tables = tables_arr[0]
             tables_by_measure = tables_arr[1]
     
     
             with pd.ExcelWriter("final.xlsx") as writer:
+                filled_sheet_length_1 = 0
                 startrow = 0
                 for table in tables:
                     table.to_excel(writer, sheet_name="by_level", startrow=startrow, startcol=0, index=True)
                     startrow = startrow + table.shape[0] + 5
+                    filled_sheet_length_1+=startrow
     
+                format_tables(writer.book, writer.sheets["by_level"], filled_sheet_length_1)
+    
+                filled_sheet_length_2 = 0
                 startrow_measure = 0
                 for level in tables_by_measure:
                     for table in tables_by_measure[level]:
                         tables_by_measure[level][table].to_excel(writer, sheet_name="by_measure", startrow=startrow_measure, startcol=0, index=True)
                         startrow_measure = startrow_measure + tables_by_measure[level][table].shape[0] + 5
+                        filled_sheet_length_2+=startrow_measure
+    
+                format_tables(writer.book, writer.sheets["by_measure"], filled_sheet_length_2)
+    
     
     
             wb = load_workbook("final.xlsx")
@@ -565,7 +646,7 @@ with dataset:
             with pd.ExcelWriter("final.xlsx") as writer:
                 for t in tables:
                     tables[t].to_excel(writer, sheet_name=t)
-    
+                    format_tables(writer.book, writer.sheets[t], len(tables[t].index) + 3)
     
             wb = load_workbook("final.xlsx")
             ws = wb['by_level']
@@ -582,47 +663,3 @@ with dataset:
     
             with open('final.xlsx', mode = "rb") as f:
                 st.download_button('Generate Excel Export', f, file_name= 'Export_' + st.session_state.text_key + '_version_1.xlsx')
-    
-        st.stop()
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        df = get_df_with_answer_labels(surveyFinalData,"ALL")#ili moze ceo df da prebaci u labele
-    
-    
-        ctb1 = pd.crosstab(df['CELL'], df['GENDER'], normalize='columns', margins = True).mul(100).round(0)
-        ctb1.index.name = "CELLxGENDER"
-        ctb1 = ctb1.style.applymap(style_table)
-    
-        ctb2 = pd.crosstab(df['CELL'], df['AGE_CATEGORY'], normalize='columns', margins = True).mul(100).round(0)
-        ctb2.index.name = "CELLxAGE_CATEGORY"
-        ctb2 = ctb2.style.applymap(style_table)
-    
-        st.write(ctb1.index.name)
-        st.dataframe(ctb1)
-    
-        st.write(ctb2.index.name)
-        st.dataframe(ctb2)
-    
-        hyperlinks = ['=HYPERLINK("#tables!A1",tables!A1)','=HYPERLINK("#tables!A7",tables!A7)']
-        df_hyperlinks = pd.DataFrame(columns = ['hyperlinks'], data =  hyperlinks)
-    
-        # st.write(df_hyperlinks)
-        with pd.ExcelWriter("final.xlsx") as writer:
-            df_hyperlinks.to_excel(writer, sheet_name="hyperlinks", index=None)
-            ctb1.to_excel(writer, sheet_name="tables")
-            ctb2.to_excel(writer, sheet_name="tables", startrow=ctb1.data.shape[0] + 3, startcol=0)
-            
-    
-        with open('final.xlsx', mode = "rb") as f:
-            st.download_button('Data Formated', f, file_name='final.xlsx')
