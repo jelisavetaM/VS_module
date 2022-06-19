@@ -412,10 +412,10 @@ def splitEngine2(measures, splitScheme, levels):
             
             
             table = pd.concat([table,df_by_level])
-            st.write(table)
     
     
 
+        st.write(table.astype(str))
         table1 = table.sort_values(by=['level','sublevel','measurment'])
         table1.reset_index(drop=True, inplace=True)
         # st.write(table1)
