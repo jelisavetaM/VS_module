@@ -629,7 +629,7 @@ with dataset:
             # row_reduced_height = []
             # for row in ws.iter_rows():
                 # if not any(cell.value for cell in row):
-                    ws.delete_rows(row[0].row)
+                    # ws.delete_rows(row[0].row)
                     # if row[0].row - 1 not in row_reduced_height:
                         # ws.row_dimensions[row[0].row].height = 0.5
                         # row_reduced_height.append(row[0].row)
@@ -638,7 +638,7 @@ with dataset:
             # row_reduced_height = []
             # for row in ws.iter_rows():
                 # if not any(cell.value for cell in row):
-                    ws.delete_rows(row[0].row)
+                    # ws.delete_rows(row[0].row)
                     # if row[0].row - 1 not in row_reduced_height:
                         # ws.row_dimensions[row[0].row].height = 0.5
                         # row_reduced_height.append(row[0].row)
