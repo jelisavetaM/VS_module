@@ -587,7 +587,7 @@ with dataset:
     
         shoppingMergedData = pd.merge(data_survey, df_vs, how='left', left_on='uuid', right_on='USER ID')
     
-        STARO
+        # STARO
         # if st.button("Run calculations - V1"):
             # chosen_measures = []
             # for m in parameters["measurments"]:
@@ -629,7 +629,6 @@ with dataset:
             # row_reduced_height = []
             # for row in ws.iter_rows():
                 # if not any(cell.value for cell in row):
-                    # ws.delete_rows(row[0].row)
                     # if row[0].row - 1 not in row_reduced_height:
                         # ws.row_dimensions[row[0].row].height = 0.5
                         # row_reduced_height.append(row[0].row)
@@ -638,7 +637,6 @@ with dataset:
             # row_reduced_height = []
             # for row in ws.iter_rows():
                 # if not any(cell.value for cell in row):
-                    # ws.delete_rows(row[0].row)
                     # if row[0].row - 1 not in row_reduced_height:
                         # ws.row_dimensions[row[0].row].height = 0.5
                         # row_reduced_height.append(row[0].row)
