@@ -355,6 +355,12 @@ def splitEngine2(measures, splitScheme, levels):
 
     global shoppingMergedData
     dfAll_tables = {}
+    if measures == []:
+        st.error("Please choose at least one measurement.")
+        st.stop()
+    if levels == []:
+        st.error("Please choose at least one shopping level.")
+        st.stop()
     for level_number, splits in splitScheme.items(): 
 
         table = pd.DataFrame()
@@ -661,11 +667,6 @@ with dataset:
         if st.button("Run calculations    ➤"):
             with st.spinner('Calculating, plase wait...'):
             
-                if parameters["measurments"] == []:
-                    st.error("Please choose at least one measurement.")
-                    
-                if parameters["sublevels"] == []:
-                    st.error("Please choose at least one shopping level.")
                     
                 chosen_measures = []
                 for m in parameters["measurments"]:
