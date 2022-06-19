@@ -674,7 +674,7 @@ with dataset:
             
             filenames = "file1.xlsx", "file2.xlsx"
             with ExitStack() as stack:
-                    file1, file2 = (fs.enter_context(open(fn, "w")) for fn in filenames)
+                file1, file2 = (fs.enter_context(open(fn, "w")) for fn in filenames)
 
                 for split_level in tables:
                     for t in tables[split_level]:
