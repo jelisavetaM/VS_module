@@ -108,8 +108,9 @@ def format_splits(splits):
                 splits_short.append(split.split("->")[0])
         splits[lvl] = splits_short
     splits_final = {"1" : splits["1"]}
-
-    uuid_and_split = list(np.concatenate([splits["1"].copy(),splits["2"].copy(),splits["3"].copy()]).flat)#ovde treba flatten za sva 3 nivoa splita
+    
+    
+    uuid_and_split = list(np.concatenate(if splits["1"] != []: [splits["1"].copy(), splits["2"] != []: splits["2"].copy(),splits["3"] != []: splits["3"].copy()]).flat)#ovde treba flatten za sva 3 nivoa splita
     uuid_and_split.append("uuid")
     
     if len(splits["2"]) > 0:
@@ -663,8 +664,7 @@ with dataset:
                         chosen_measures.append(m)
         
     
-                st.write(splits_final)
-                st.stop()
+
                 tables = splitEngine2(chosen_measures, splits_final, parameters["sublevels"])
     
                 # for split_level in tables:
