@@ -654,6 +654,7 @@ with dataset:
         #NOVO
         if st.button("Run calculations - V2"):
             with st.spinner('Wait for it...'):
+
             
                 chosen_measures = []
                 for m in parameters["measurments"]:
@@ -661,9 +662,9 @@ with dataset:
                         chosen_measures.append(m)
         
     
-    
-                tables = splitEngine2(chosen_measures, splits_final, parameters["sublevels"])
-            st.success('Done!')    
+            st.success('Done!') 
+            tables = splitEngine2(chosen_measures, splits_final, parameters["sublevels"])
+               
             # for split_level in tables:
                 # for t in tables[split_level]:
                     # if t == "by_measure":
