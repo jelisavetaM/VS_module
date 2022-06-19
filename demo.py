@@ -723,8 +723,8 @@ with dataset:
                 ws = wb[sheet.title]
                 ws.freeze_panes = ws['A4']
                 ws.auto_filter.ref = "A3:AA3"
-                st.stop()
                 wb.save(wb)
+                st.stop()
 
             ws = wb['by_level']
             ws.freeze_panes = ws['A4']
