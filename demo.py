@@ -721,8 +721,8 @@ with dataset:
             
             for sheet in wb.worksheets:
                 ws = wb[sheet.title]
-                st.stop()
                 ws.freeze_panes = ws['A4']
+                st.stop()
                 ws.auto_filter.ref = "A3:AA3"
                 wb.save(wb)
 
