@@ -668,7 +668,7 @@ with dataset:
                     st.write(tables[split_level][t].astype(str))
                     # format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
                     
-            with pd.ExcelWriter("final_by_measure.xlsx") as writer1:
+            with pd.ExcelWriter("final_by_measure.xlsx") as writer1 and with pd.ExcelWriter("final_by_level.xlsx") as writer2:
 
                 for split_level in tables:
                     for t in tables[split_level]:
