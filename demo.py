@@ -6,7 +6,8 @@ from openpyxl import load_workbook, Workbook
 from urllib.request import urlopen
 import requests, json
 import xlsxwriter
-from contextlib import ExitStack
+from zipfile import ZipFile
+from io import BytesIO
 
 
 def style_table(v):
@@ -621,7 +622,7 @@ with dataset:
     
                 format_tables(writer.book, writer.sheets["by_measure"], filled_sheet_length_2)
     
-    
+        
     
             wb = load_workbook("final.xlsx")
     
@@ -659,9 +660,9 @@ with dataset:
                     chosen_measures.append(m)
     
 
+
             tables = splitEngine2(chosen_measures, splits_final, parameters["sublevels"])
-            
-            
+
             for split_level in tables:
                 for t in tables[split_level]:
                     # tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
@@ -669,31 +670,37 @@ with dataset:
                     st.write(tables[split_level][t].astype(str))
                     # format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
                     
-            # with pd.ExcelWriter("final_by_measure.xlsx") as writer1:
-            
-            filenames = ['file1.xlsx', 'file2.xlsx']
-            with ExitStack() as stack:
-                files = [
-                    stack.enter_context(open(filename))
-                    for filename in filenames
-                ]
-                for split_level in tables:
-                    for t in tables[split_level]:
-                        if t == "by_measure":
-                            tables[split_level][t].to_excel('file1.xlsx', sheet_name=t + split_level)
-                            # format_tables(file1.book, file1.sheets[t + split_level], len(tables[split_level][t].index) + 3)    
-                        if t == "by_level":
-                            tables[split_level][t].to_excel('file2.xlsx', sheet_name=t + split_level)
-                            # format_tables(file2.book, file2.sheets[t + split_level], len(tables[split_level][t].index) + 3)
-            
-            # with pd.ExcelWriter("final_by_level.xlsx") as writer2:
+            with pd.ExcelWriter("final_by_measure.xlsx") as writer:
 
-                # for split_level in tables:
-                    # if t == "by_level":
-                        # for t in tables[split_level]:
-                            # tables[split_level][t].to_excel(writer2, sheet_name=t + split_level)
-                            # format_tables(writer2.book, writer2.sheets[t + split_level], len(tables[split_level][t].index) + 3)
+                for split_level in tables:
+                    if t == "by_measure":
+                        for t in tables[split_level]:
+                            tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
+                            format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
+            
+            with pd.ExcelWriter("final_by_level.xlsx") as writer:
+
+                for split_level in tables:
+                    if t == "by_level":
+                        for t in tables[split_level]:
+                            tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
+                            format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
     
+            zipObj = ZipFile("sample.zip", "w")
+            zipObj.write("final_by_measure.xlsx")
+            zipObj.write("final_by_level.xlsx")
+            zipObj.close()
+            ZipfileDotZip = "sample.zip"
+            
+            
+            with open(ZipfileDotZip, "rb") as f:
+                bytes = f.read()
+                b64 = base64.b64encode(bytes).decode()
+                href = f"<a href=\"data:file/zip;base64,{b64}\" download='{ZipfileDotZip}.zip'>\
+                    Click last model weights\
+                </a>"
+            st.sidebar.markdown(href, unsafe_allow_html=True)
+            
             # wb = load_workbook("final.xlsx")
             # ws = wb['by_level']
             # ws.freeze_panes = ws['A4']
@@ -707,7 +714,7 @@ with dataset:
             # wb.save("final.xlsx")
     
     
-            with open('file1.xlsx', mode = "rb") as f:
+            with open('final_by_measure.xlsx', mode = "rb") as f:
                 st.download_button('Generate Excel Export', f, file_name= 'Export_' + st.session_state.text_key + '_version_by_measure.xlsx')
                 
             with open('final_by_level.xlsx', mode = "rb") as f:
