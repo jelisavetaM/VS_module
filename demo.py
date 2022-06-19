@@ -695,8 +695,8 @@ with dataset:
             
             
             with open(ZipfileDotZip, "rb") as f:
-                # bytes = f.read()
-                # b64 = base64.b64encode(bytes).decode()
+                bytes = f.read()
+                b64 = base64.b64encode(bytes).decode()
                 # href = f"<a href=\"data:file/zip;base64,{b64}\" download='{ZipfileDotZip}.zip'>\
                     # Click last model weights\
                 # </a>"
@@ -706,7 +706,7 @@ with dataset:
                     label="Download ZIP",
                     data=ZipfileDotZip,
                     file_name="myfile.zip",
-                    mime="application/zip"
+                    mime="application/x-7z-compressed"
                 )
                 
             with st.sidebar:
