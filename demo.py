@@ -672,19 +672,19 @@ with dataset:
                     
             with pd.ExcelWriter("final_by_measure.xlsx") as writer:
 
+            for split_level in tables:
                 for t in tables[split_level]:
-                    for split_level in tables:
-                        if t == "by_measure":
-                                tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
-                                format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
+                    if t == "by_measure":
+                        tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
+                        format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
             
             with pd.ExcelWriter("final_by_level.xlsx") as writer:
-
+            
+            for split_level in tables:
                 for t in tables[split_level]:
-                    for split_level in tables:
-                        if t == "by_measure":
-                                tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
-                                format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
+                    if t == "by_measure":
+                        tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
+                        format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
     
             zipObj = ZipFile("sample.zip", "w")
             zipObj.write("final_by_measure.xlsx")
