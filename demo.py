@@ -376,9 +376,7 @@ def splitEngine2(measures, splitScheme, levels):
                     except:
                         st.error("Calculation get_measure_df failed for measure: " + measure)
                         st.write(df.astype(str))
-                        st.stop()
-                    
-                    # st.stop()
+                        st.stop()                   
                     
                     df.insert(0, 'level', level)
                     
@@ -394,12 +392,8 @@ def splitEngine2(measures, splitScheme, levels):
                         df.insert(2, 'measurment', measure)
                         df_splits = df
                     else:
-                        # st.write(df.astype(str))
                         df_splits = pd.merge(df_splits, df, how='left', on=["level","sublevel"])
-    
-                # st.write(df_splits.astype(str))
-        
-    
+
                 df_by_level = pd.concat([df_by_level,df_splits])
                 if len(arrays[0])==0:
                     arrays[0] = sp_arr
@@ -466,7 +460,7 @@ def splitEngine2(measures, splitScheme, levels):
         
         # st.write(tables["by_level"].astype(str))
         # st.write(tables["by_measure"].astype(str))
-    st.write(dfAll_tables)
+    # st.write(dfAll_tables)
     return dfAll_tables
 
 def inputEntered ():
