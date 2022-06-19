@@ -97,11 +97,7 @@ def get_df_with_answer_labels(df,vars_arr):
 
 def format_splits(splits):
     global uuid_and_split
-    
-    st.write(splits)
-    st.write(splits["1"])
-    st.write(splits["2"])
-    st.write(splits["3"])
+
     
     for lvl in splits:
         splits_short = []
@@ -416,7 +412,7 @@ def splitEngine2(measures, splitScheme, levels):
             
             
             table = pd.concat([table,df_by_level])
-            
+            st.write(table)
     
     
 
