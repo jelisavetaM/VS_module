@@ -653,9 +653,7 @@ with dataset:
     
         #NOVO
         if st.button("Run calculations - V2"):
-            with st.spinner('Wait for it...'):
-                time.sleep(5)
-            st.success('Done!')
+
             chosen_measures = []
             for m in parameters["measurments"]:
                 if parameters["measurments"][m]:
