@@ -722,7 +722,7 @@ with dataset:
             for sheet in wb.worksheets:
                 # ws = wb[sheet]
                 st.write(sheet)
-                st.write(ws.title)
+                st.write(sheet.title)
                 st.stop()
                 # ws.freeze_panes = ws['A4']
                 # ws.auto_filter.ref = "A3:AA3"
