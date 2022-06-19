@@ -701,7 +701,7 @@ with dataset:
                 bytes = f.read()
                 b64 = base64.b64encode(bytes).decode()
                 href = f"<a class='download' href=\"data:file/zip;base64,{b64}\" download='{ZipfileDotZip}.zip'>\
-                    <b>Download data for project </b>" + st.session_state.text_key + "\
+                    <b>Download data for project " + st.session_state.text_key + "</b>\
                 </a>"
                 st.sidebar.markdown(href, unsafe_allow_html=True)
                 st.download_button('Proba', ZipfileDotZip, file_name= 'Export_' + st.session_state.text_key + '_version_by_measure.zip')
