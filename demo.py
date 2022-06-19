@@ -704,13 +704,13 @@ with dataset:
                 
                 for sheet in wb.worksheets:
                     ws = wb[sheet.title]
+                    df = f.parse(ws)
+                    st.write(df)
+                    st.stop()
                     ws.freeze_panes = ws['A4']
                     ws.auto_filter.ref = "A3:AA3"
                 wb.save("final_by_level.xlsx")
-                # ws = wb['by_level']
-                # ws.freeze_panes = ws['A4']
-                # ws.auto_filter.ref = "A3:AA3"
-                # wb.save("final_by_measure.xlsx")
+            
     
                 zipObj = ZipFile("sample.zip", "w")
                 zipObj.write("final_by_measure.xlsx")
@@ -728,12 +728,7 @@ with dataset:
                     st.sidebar.markdown(href, unsafe_allow_html=True)
             
             st.success('Done!')
-            
-            # wb = load_workbook("final.xlsx")
-            # ws = wb['by_measure']
-            # ws.freeze_panes = ws['A4']
-            # ws.auto_filter.ref = "A3:AA3"
-            # wb.save("final.xlsx")
+
     
     
             with open('final_by_measure.xlsx', mode = "rb") as f:
