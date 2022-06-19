@@ -707,7 +707,9 @@ with dataset:
                     ws.freeze_panes = ws['A4']
                     row_temp = str(pd.DataFrame(ws.values).shape[1])
                     # ws.autofilter(0, 0, 10, 3)
-                    ws.auto_filter.ref = ws.dimensions
+                    FullRange = "A1:" + get_column_letter(worksheet.max_column) + str(worksheet.max_row)
+                    ws.auto_filter.ref = FullRange
+                    # ws.auto_filter.ref = ws.dimensions
                 wb.save("final_by_level.xlsx")
             
     
