@@ -1,4 +1,4 @@
-.download a:link, a:visited {
+a.download:link, a:visited {
   background-color: #f44336 !important;
   color: white!important;
   padding: 14px 25px !important;
@@ -7,6 +7,6 @@
   display: inline-block !important;
 }
 
-.download a:hover, a:active {
+a.download:hover, a:active {
   background-color: red !important;
 }
