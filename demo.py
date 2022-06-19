@@ -717,7 +717,7 @@ with dataset:
     
     
             with open('final_by_measure.xlsx', mode = "rb") as f:
-                st.download_button('Generate Excel Export', f, file_name= 'Export_' + st.session_state.text_key + '_version_by_measure.xlsx')
+                st.download_button('Generate Excel Export - version by measure', f, file_name= 'Export_' + st.session_state.text_key + '_version_by_measure.xlsx')
                 
             with open('final_by_level.xlsx', mode = "rb") as f:
-                st.download_button('Generate Excel Export', f, file_name= 'Export_' + st.session_state.text_key + '_version_by_level.xlsx')
+                st.download_button('Generate Excel Export - version by level', f, file_name= 'Export_' + st.session_state.text_key + '_version_by_level.xlsx')
