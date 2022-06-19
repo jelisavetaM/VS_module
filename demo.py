@@ -664,25 +664,25 @@ with dataset:
             for split_level in tables:
                 for t in tables[split_level]:
                     # tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
-                    st.info(t)
-                    # st.write(tables[split_level][t].astype(str))
+                    st.info(t + split_level)
+                    st.write(tables[split_level][t].astype(str))
                     # format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
                     
-            with pd.ExcelWriter("final_by_measure.xlsx") as writer:
+            with pd.ExcelWriter("final_by_measure.xlsx") as writer1:
 
                 for split_level in tables:
                     if t == "by_measure":
                         for t in tables[split_level]:
-                            tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
-                            format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
+                            tables[split_level][t].to_excel(writer1, sheet_name=t + split_level)
+                            format_tables(writer1.book, writer1.sheets[t + split_level], len(tables[split_level][t].index) + 3)
             
-            with pd.ExcelWriter("final_by_level.xlsx") as writer:
+            with pd.ExcelWriter("final_by_level.xlsx") as writer2:
 
                 for split_level in tables:
                     if t == "by_level":
                         for t in tables[split_level]:
-                            tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
-                            format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
+                            tables[split_level][t].to_excel(writer2, sheet_name=t + split_level)
+                            format_tables(writer2.book, writer2.sheets[t + split_level], len(tables[split_level][t].index) + 3)
     
             # wb = load_workbook("final.xlsx")
             # ws = wb['by_level']
