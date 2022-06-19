@@ -653,55 +653,57 @@ with dataset:
     
         #NOVO
         if st.button("Run calculations - V2"):
-
-            chosen_measures = []
-            for m in parameters["measurments"]:
-                if parameters["measurments"][m]:
-                    chosen_measures.append(m)
+            with st.spinner('Wait for it...'):
+            
+                chosen_measures = []
+                for m in parameters["measurments"]:
+                    if parameters["measurments"][m]:
+                        chosen_measures.append(m)
+        
     
-
-
-            tables = splitEngine2(chosen_measures, splits_final, parameters["sublevels"])
-
-            # for split_level in tables:
-                # for t in tables[split_level]:
-                    # if t == "by_measure":
-                        # st.info(split)
-                        # st.write(tables[split_level][t].astype(str))
-                    # tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
-                    # format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
-                    
-            with pd.ExcelWriter("final_by_measure.xlsx") as writer:
-
-                for split_level in tables:
-                    for t in tables[split_level]:
-                        if t == "by_measure":
-                            tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
-                            format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
-            
-            with pd.ExcelWriter("final_by_level.xlsx") as writer:
-            
-                for split_level in tables:
-                    for t in tables[split_level]:
-                        if t == "by_measure":
-                            tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
-                            format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
     
-            zipObj = ZipFile("sample.zip", "w")
-            zipObj.write("final_by_measure.xlsx")
-            zipObj.write("final_by_level.xlsx")
-            zipObj.close()
-            ZipfileDotZip = "sample.zip"
+                tables = splitEngine2(chosen_measures, splits_final, parameters["sublevels"])
+    
+                # for split_level in tables:
+                    # for t in tables[split_level]:
+                        # if t == "by_measure":
+                            # st.info(split)
+                            # st.write(tables[split_level][t].astype(str))
+                        # tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
+                        # format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
+                        
+                with pd.ExcelWriter("final_by_measure.xlsx") as writer:
+    
+                    for split_level in tables:
+                        for t in tables[split_level]:
+                            if t == "by_measure":
+                                tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
+                                format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
+                
+                with pd.ExcelWriter("final_by_level.xlsx") as writer:
+                
+                    for split_level in tables:
+                        for t in tables[split_level]:
+                            if t == "by_measure":
+                                tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
+                                format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
+        
+                zipObj = ZipFile("sample.zip", "w")
+                zipObj.write("final_by_measure.xlsx")
+                zipObj.write("final_by_level.xlsx")
+                zipObj.close()
+                ZipfileDotZip = "sample.zip"
+                
+                
+                with open(ZipfileDotZip, "rb") as f:
+                    bytes = f.read()
+                    b64 = base64.b64encode(bytes).decode()
+                    href = f"<a class='download' href=\"data:file/zip;base64,{b64}\" download='{ZipfileDotZip}.zip'>\
+                        <b>Download data for project " + st.session_state.text_key + "</b>\
+                    </a>"
+                    st.sidebar.markdown(href, unsafe_allow_html=True)
             
-            
-            with open(ZipfileDotZip, "rb") as f:
-                bytes = f.read()
-                b64 = base64.b64encode(bytes).decode()
-                href = f"<a class='download' href=\"data:file/zip;base64,{b64}\" download='{ZipfileDotZip}.zip'>\
-                    <b>Download data for project " + st.session_state.text_key + "</b>\
-                </a>"
-                st.sidebar.markdown(href, unsafe_allow_html=True)
-
+            st.success('Done!')
             
             # wb = load_workbook("final.xlsx")
             # ws = wb['by_level']
