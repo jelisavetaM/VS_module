@@ -699,6 +699,21 @@ with dataset:
                                 tables[split_level][t].to_excel(writer, sheet_name="Splits levels_" + split_level)
                                 format_tables(writer.book, writer.sheets["Splits levels_" + split_level], len(tables[split_level][t].index) + 3)
         
+                wb = load_workbook("final_by_measure.xlsx")
+                wb = load_workbook("final_by_level.xlsx")
+                
+                for sheet in wb.worksheets:
+                    ws = wb[sheet.title]
+                    ws.freeze_panes = ws['A4']
+                    ws.auto_filter.ref = "A3:AA3"
+                    wb.save(wb)
+                    st.stop()
+    
+                ws = wb['by_level']
+                ws.freeze_panes = ws['A4']
+                ws.auto_filter.ref = "A3:AA3"
+                wb.save("final_by_measure.xlsx")
+    
                 zipObj = ZipFile("sample.zip", "w")
                 zipObj.write("final_by_measure.xlsx")
                 zipObj.write("final_by_level.xlsx")
@@ -716,21 +731,6 @@ with dataset:
             
             st.success('Done!')
             
-            wb = load_workbook("final_by_measure.xlsx")
-            wb = load_workbook("final_by_level.xlsx")
-            
-            for sheet in wb.worksheets:
-                ws = wb[sheet.title]
-                ws.freeze_panes = ws['A4']
-                ws.auto_filter.ref = "A3:AA3"
-                wb.save(wb)
-                st.stop()
-
-            ws = wb['by_level']
-            ws.freeze_panes = ws['A4']
-            ws.auto_filter.ref = "A3:AA3"
-            wb.save("final.xlsx")
-    
             # wb = load_workbook("final.xlsx")
             # ws = wb['by_measure']
             # ws.freeze_panes = ws['A4']
