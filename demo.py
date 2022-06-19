@@ -680,9 +680,8 @@ with dataset:
                     for t in tables[split_level]:
                         if t == "by_measure":
                             tables[split_level][t].to_excel(file1, sheet_name=t + split_level)
-                            format_tables(file1.book, file1.sheets[t + split_level], len(tables[split_level][t].index) + 3)
-                            
-                        elif t == "by_level":
+                            format_tables(file1.book, file1.sheets[t + split_level], len(tables[split_level][t].index) + 3)    
+                        if t == "by_level":
                             tables[split_level][t].to_excel(file2, sheet_name=t + split_level)
                             format_tables(file2.book, file2.sheets[t + split_level], len(tables[split_level][t].index) + 3)
             
