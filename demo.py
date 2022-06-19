@@ -720,8 +720,8 @@ with dataset:
             wb = load_workbook("final_by_level.xlsx")
             
             for sheet in wb.worksheets:
-                ws = wb[sheet]
-                st.write(wb[sheet])
+                # ws = wb[sheet]
+                st.write(sheet)
                 st.write(ws.title)
                 st.stop()
                 # ws.freeze_panes = ws['A4']
