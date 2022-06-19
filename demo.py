@@ -671,10 +671,14 @@ with dataset:
             with pd.ExcelWriter("final_by_measure.xlsx") as writer1:
 
                 for split_level in tables:
-                    if t == "by_measure":
-                        for t in tables[split_level]:
+                    for t in tables[split_level]:
+                        if t == "by_measure":
                             tables[split_level][t].to_excel(writer1, sheet_name=t + split_level)
                             format_tables(writer1.book, writer1.sheets[t + split_level], len(tables[split_level][t].index) + 3)
+                            
+                        elif t == "by_level":
+                            tables[split_level][t].to_excel(writer2, sheet_name=t + split_level)
+                            format_tables(writer2.book, writer2.sheets[t + split_level], len(tables[split_level][t].index) + 3)
             
             with pd.ExcelWriter("final_by_level.xlsx") as writer2:
 
