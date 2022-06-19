@@ -8,6 +8,7 @@ import requests, json
 import xlsxwriter
 from zipfile import ZipFile
 from io import BytesIO
+import base64
 
 
 def style_table(v):
