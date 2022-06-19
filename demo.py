@@ -708,7 +708,10 @@ with dataset:
                     file_name="myfile.zip",
                     mime="application/zip"
                 )
-            st.sidebar.markdown(btn, unsafe_allow_html=True)
+                
+            with st.sidebar:
+                button = btn
+            # st.sidebar.markdown(btn, unsafe_allow_html=True)
             
             # wb = load_workbook("final.xlsx")
             # ws = wb['by_level']
