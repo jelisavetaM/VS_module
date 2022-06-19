@@ -704,7 +704,7 @@ with dataset:
                 
                 for sheet in wb.worksheets:
                     ws = wb[sheet.title]
-                    df = pd.read_excel("final_by_measure.xlsx", sheet_name = "Splits levels_1")
+                    df = pd.DataFrame(ws.values)
                     st.write(df.shape)
                     st.stop()
                     ws.freeze_panes = ws['A4']
