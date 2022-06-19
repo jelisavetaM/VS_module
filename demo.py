@@ -697,9 +697,9 @@ with dataset:
             with open(ZipfileDotZip, "rb") as f:
                 bytes = f.read()
                 b64 = base64.b64encode(bytes).decode()
-                # href = f"<a href=\"data:file/zip;base64,{b64}\" download='{ZipfileDotZip}.zip'>\
-                    # Click last model weights\
-                # </a>"
+                href = f"<a href=\"data:file/zip;base64,{b64}\" download='{ZipfileDotZip}.zip'>\
+                    Click last model weights\
+                </a>"
                 st.download_button('Proba', ZipfileDotZip, file_name= 'Export_' + st.session_state.text_key + '_version_by_measure.zip')
                 
                 btn = st.download_button(
