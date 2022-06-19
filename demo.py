@@ -661,11 +661,19 @@ with dataset:
         if st.button("Run calculations    ➤"):
             with st.spinner('Calculating, plase wait...'):
             
+                if parameters["measurments"] == []:
+                    st.error("Please choose at least one measurement.")
+                    
+                if parameters["sublevels"] == []:
+                    st.error("Please choose at least one shopping level.")
+                    
                 chosen_measures = []
                 for m in parameters["measurments"]:
                     if parameters["measurments"][m]:
                         chosen_measures.append(m)
-        
+                
+                
+                parameters["sublevels"]
     
 
                 tables = splitEngine2(chosen_measures, splits_final, parameters["sublevels"])
