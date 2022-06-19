@@ -354,71 +354,71 @@ def splitEngine2(measures, splitScheme, levels):
     global shoppingMergedData
     dfAll_tables = {}
     for level_number, splits in splitScheme.items(): 
-        try:
-            table = pd.DataFrame()
-            arrays = [[],[]]
-            # arrays = [
-                    # ["bar", "bar", "baz", "baz", "foo", "foo", "qux", "qux"],
-                    # ["one", "two", "one", "two", "one", "two", "one", "two"],
-                    # ["one", "two", "one", "two", "one", "two", "one", "two"]
-    
-            # ]
-    
-            for level in levels:
-                sublevels = levels[level]
-                df_by_level = pd.DataFrame()
-        
-                for measure in measures:
-                    df_splits = pd.DataFrame()
-                    sp_arr = ["", "", ""]
-                    for split in splits:
-                        df = get_measure_df(measure,level,split)
-    
-        
-                        try:
-                            df = df[df[level].isin(sublevels)]
-                        except:
-                            st.error("Calculation get_measure_df failed for measure: " + measure)
-                            st.write(df.astype(str))
-                            st.stop()                   
-                        
-                        df.insert(0, 'level', level)
-                        
-                        split_append = ""
-                        for s in split:
-                            split_append = split_append + s 
-                        df = df.rename(columns={level: "sublevel","Total" : "Total_" + split_append})
-                        
-                        for x in range(0,(df.shape[1]-2)):
-                            sp_arr.append(split)
-                        
-                        if df_splits.empty:
-                            df.insert(2, 'measurment', measure)
-                            df_splits = df
-                        else:
-                            df_splits = pd.merge(df_splits, df, how='left', on=["level","sublevel"])
-    
-                    df_by_level = pd.concat([df_by_level,df_splits])
-                    if len(arrays[0])==0:
-                        arrays[0] = sp_arr
-        
-                # df_by_level = df_by_level.sort_values(by=['sublevel'])
-                df_by_level.reset_index(drop=True, inplace=True)
-                
-                # df_by_level.loc[df_by_level.shape[0]] = empty_row
-        
-                # OVDE TREBA DODATI DA UBACI SAMPLE SIZE
-                # sampleSizes = data_survey[split].value_counts()
-                # sampleSizes['Total'] = sampleSizes.sum()
-                # N = pd.DataFrame(data = [sampleSizes], index = ['Sample size'], columns=dfAll.columns)
-                # dfAll = pd.concat([N, dfAll])
-                
-                
-                table = pd.concat([table,df_by_level])
-    
-        except:
-            st.error("Unexpected error, please contact Jelisaveta/Ivan/Nemanja.")
 
+        table = pd.DataFrame()
+        arrays = [[],[]]
+        # arrays = [
+                # ["bar", "bar", "baz", "baz", "foo", "foo", "qux", "qux"],
+                # ["one", "two", "one", "two", "one", "two", "one", "two"],
+                # ["one", "two", "one", "two", "one", "two", "one", "two"]
+
+        # ]
+   
+        for level in levels:
+            sublevels = levels[level]
+            df_by_level = pd.DataFrame()
+    
+            for measure in measures:
+                df_splits = pd.DataFrame()
+                sp_arr = ["", "", ""]
+                for split in splits:
+                    df = get_measure_df(measure,level,split)
+
+    
+                    try:
+                        df = df[df[level].isin(sublevels)]
+                    except:
+                        st.error("Calculation get_measure_df failed for measure: " + measure)
+                        st.write(df.astype(str))
+                        st.stop()                   
+                    
+                    df.insert(0, 'level', level)
+                    
+                    split_append = ""
+                    for s in split:
+                        split_append = split_append + s 
+                    df = df.rename(columns={level: "sublevel","Total" : "Total_" + split_append})
+                    
+                    for x in range(0,(df.shape[1]-2)):
+                        sp_arr.append(split)
+                    
+                    if df_splits.empty:
+                        df.insert(2, 'measurment', measure)
+                        df_splits = df
+                    else:
+                        df_splits = pd.merge(df_splits, df, how='left', on=["level","sublevel"])
+
+                df_by_level = pd.concat([df_by_level,df_splits])
+                if len(arrays[0])==0:
+                    arrays[0] = sp_arr
+    
+            # df_by_level = df_by_level.sort_values(by=['sublevel'])
+            df_by_level.reset_index(drop=True, inplace=True)
+            
+            # df_by_level.loc[df_by_level.shape[0]] = empty_row
+    
+            # OVDE TREBA DODATI DA UBACI SAMPLE SIZE
+            # sampleSizes = data_survey[split].value_counts()
+            # sampleSizes['Total'] = sampleSizes.sum()
+            # N = pd.DataFrame(data = [sampleSizes], index = ['Sample size'], columns=dfAll.columns)
+            # dfAll = pd.concat([N, dfAll])
+            
+            
+            table = pd.concat([table,df_by_level])
+    
+    
+        st.write(table)
+        st.stop()
         table1 = table.sort_values(by=['level','sublevel','measurment'])
         table1.reset_index(drop=True, inplace=True)
         # st.write(table1)
