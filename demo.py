@@ -358,6 +358,9 @@ def splitEngine2(measures, splitScheme, levels):
     if measures == []:
         st.error("Please choose at least one measurement.")
         st.stop()
+    st.write(levels)
+    st.write(splitScheme)
+    st.stop()
     if levels == []:
         st.error("Please choose at least one shopping level.")
         st.stop()
