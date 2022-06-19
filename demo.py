@@ -6,6 +6,7 @@ from openpyxl import load_workbook, Workbook
 from urllib.request import urlopen
 import requests, json
 import xlsxwriter
+from contextlib import ExitStack
 
 
 def style_table(v):
@@ -668,17 +669,25 @@ with dataset:
                     st.write(tables[split_level][t].astype(str))
                     # format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
                     
-            with pd.ExcelWriter("final_by_measure.xlsx") as writer1 and with pd.ExcelWriter("final_by_level.xlsx") as writer2:
+            with pd.ExcelWriter("final_by_measure.xlsx") as writer1:
+            
+            
+
+            with ExitStack() as stack:
+                files = [
+                    stack.enter_context(open(filename))
+                    file1, file2 = (fs.enter_context(open(fn, "w")) for fn in filenames)
+                    ]
 
                 for split_level in tables:
                     for t in tables[split_level]:
                         if t == "by_measure":
-                            tables[split_level][t].to_excel(writer1, sheet_name=t + split_level)
-                            format_tables(writer1.book, writer1.sheets[t + split_level], len(tables[split_level][t].index) + 3)
+                            tables[split_level][t].to_excel(file1, sheet_name=t + split_level)
+                            format_tables(file1.book, file1.sheets[t + split_level], len(tables[split_level][t].index) + 3)
                             
                         elif t == "by_level":
-                            tables[split_level][t].to_excel(writer2, sheet_name=t + split_level)
-                            format_tables(writer2.book, writer2.sheets[t + split_level], len(tables[split_level][t].index) + 3)
+                            tables[split_level][t].to_excel(file2, sheet_name=t + split_level)
+                            format_tables(file2.book, file2.sheets[t + split_level], len(tables[split_level][t].index) + 3)
             
             with pd.ExcelWriter("final_by_level.xlsx") as writer2:
 
