@@ -695,13 +695,20 @@ with dataset:
             
             
             with open(ZipfileDotZip, "rb") as f:
-                bytes = f.read()
-                b64 = base64.b64encode(bytes).decode()
-                href = f"<a href=\"data:file/zip;base64,{b64}\" download='{ZipfileDotZip}.zip'>\
-                    Click last model weights\
-                </a>"
-                href = st.download_button('Proba', ZipfileDotZip, file_name= 'Export_' + st.session_state.text_key + '_version_by_measure.xlsx')
-            st.sidebar.markdown(href, unsafe_allow_html=True)
+                # bytes = f.read()
+                # b64 = base64.b64encode(bytes).decode()
+                # href = f"<a href=\"data:file/zip;base64,{b64}\" download='{ZipfileDotZip}.zip'>\
+                    # Click last model weights\
+                # </a>"
+                # href = st.download_button('Proba', ZipfileDotZip, file_name= 'Export_' + st.session_state.text_key + '_version_by_measure.xlsx')
+                
+                btn = st.download_button(
+                    label="Download ZIP",
+                    data=ZipfileDotZip,
+                    file_name="myfile.zip",
+                    mime="application/zip"
+                )
+            st.sidebar.markdown(btn, unsafe_allow_html=True)
             
             # wb = load_workbook("final.xlsx")
             # ws = wb['by_level']
