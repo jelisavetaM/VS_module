@@ -671,11 +671,12 @@ with dataset:
                     
             # with pd.ExcelWriter("final_by_measure.xlsx") as writer1:
             
-            
-            filenames = "file1.xlsx", "file2.xlsx"
-            with ExitStack() as fs:
-                file1, file2 = (fs.enter_context(open(fn, "w")) for fn in filenames)
-                file2.write("Some text")
+            filenames = ['file1.xlsx', 'file2.xlsx']
+            with ExitStack() as stack:
+                files = [
+                    stack.enter_context(open(filename))
+                    for filename in filenames
+                ]
                 tables['1']['by_level'].to_excel(file2, sheet_name='test')
                 # for split_level in tables:
                     # for t in tables[split_level]:
