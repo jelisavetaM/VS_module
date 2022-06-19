@@ -11,6 +11,9 @@ from io import BytesIO
 import base64
 
 
+with open('style.css') as f:
+    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
 def style_table(v):
     if v < 4:
         return 'color:green;'
@@ -697,7 +700,7 @@ with dataset:
             with open(ZipfileDotZip, "rb") as f:
                 bytes = f.read()
                 b64 = base64.b64encode(bytes).decode()
-                href = f"<button style='background-color: #033b6e; color: white'><a href=\"data:file/zip;base64,{b64}\" download='{ZipfileDotZip}.zip'>\
+                href = f"<button style='background-color: #033b6e'><a href=\"data:file/zip;base64,{b64}\" download='{ZipfileDotZip}.zip'>\
                     Click last model weights\
                 </a></button>"
                 st.sidebar.markdown(href, unsafe_allow_html=True)
