@@ -140,28 +140,28 @@ def format_splits(splits):
     return splits_final
 
 def format_tables(workbook, worksheet, number_of_sheet_rows):
-    format_procenti = workbook.add_format({'num_format': '0%'})
+    percentage_format = workbook.add_format({'num_format': '0%'})
 
 
     worksheet.conditional_format("$B$1:$QQ$%d" % (number_of_sheet_rows),
                                 {"type": "formula",
                                 "criteria": '=INDIRECT("D"&ROW())="Penetration on total sample" ',
-                                "format": format_procenti
+                                "format": percentage_format
                                 })
     worksheet.conditional_format("$B$1:$QQ$%d" % (number_of_sheet_rows),
                                 {"type": "formula",
                                 "criteria": '=INDIRECT("D"&ROW())="Consideration on total sample"',
-                                "format": format_procenti
+                                "format": percentage_format
                                 })
     worksheet.conditional_format("$B$1:$QQ$%d" % (number_of_sheet_rows),
                                 {"type": "formula",
                                 "criteria": '=INDIRECT("D"&ROW())="Share of Total Units"',
-                                "format": format_procenti
+                                "format": percentage_format
                                 })
     worksheet.conditional_format("$B$1:$QQ$%d" % (number_of_sheet_rows),
                                 {"type": "formula",
                                 "criteria": '=INDIRECT("D"&ROW())="Share of Total Value"',
-                                "format": format_procenti
+                                "format": percentage_format
                                 })
 
 
@@ -537,10 +537,10 @@ with dataset:
             st.info("Choose basic splits (cell is default):")
             splits_long["1"] =  st.multiselect("Type to search or just scroll:",questions_label_text, key="splits_lvl1")
 
-            st.info("Choose nested splits - the first level nest:")
+            st.info("Choose nested splits - the first level nest: (leave empty if not needed)")
             splits_long["2"] =  st.multiselect("Type to search or just scroll:",questions_label_text, key="splits_lvl2")
 
-            st.info("Choose nested splits - the second level nest:")
+            st.info("Choose nested splits - the second level nest: (leave empty if not needed)")
             splits_long["3"] =  st.multiselect("Type to search or just scroll:",questions_label_text, key="splits_lvl3")
             if len(splits_long["3"])>0 and len(splits_long["2"])==0:
                 st.error("Please define second level nest before the third level.")
@@ -716,11 +716,15 @@ with dataset:
             
             st.success('Done!')
             
-            # wb = load_workbook("final.xlsx")
-            # ws = wb['by_level']
-            # ws.freeze_panes = ws['A4']
-            # ws.auto_filter.ref = "A3:AA3"
-            # wb.save("final.xlsx")
+            wb = load_workbook("final_by_measure.xlsx")
+            wb = load_workbook("final_by_level.xlsx")
+            sheets_to_df= pd.read_excel(wb, sheet_name=None)
+            st.write(sheets_to_df)
+            st.stop()
+            ws = wb['by_level']
+            ws.freeze_panes = ws['A4']
+            ws.auto_filter.ref = "A3:AA3"
+            wb.save("final.xlsx")
     
             # wb = load_workbook("final.xlsx")
             # ws = wb['by_measure']
