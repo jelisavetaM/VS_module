@@ -720,13 +720,10 @@ with dataset:
             wb = load_workbook("final_by_level.xlsx")
             
             for sheet in wb.worksheets:
-                # ws = wb[sheet]
-                st.write(sheet)
-                st.write(sheet.title)
-                st.stop()
-                # ws.freeze_panes = ws['A4']
-                # ws.auto_filter.ref = "A3:AA3"
-                # wb.save(wb)
+                ws = wb[sheet.title]
+                ws.freeze_panes = ws['A4']
+                ws.auto_filter.ref = "A3:AA3"
+                wb.save(wb)
 
             st.stop()
             ws = wb['by_level']
