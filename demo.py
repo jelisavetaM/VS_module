@@ -676,17 +676,17 @@ with dataset:
                     
             with pd.ExcelWriter("final_by_measure.xlsx") as writer:
 
+            for t in tables[split_level]:
                 for split_level in tables:
                     if t == "by_measure":
-                        for t in tables[split_level]:
                             tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
                             format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
             
             with pd.ExcelWriter("final_by_level.xlsx") as writer:
 
+            for t in tables[split_level]:
                 for split_level in tables:
-                    if t == "by_level":
-                        for t in tables[split_level]:
+                    if t == "by_measure":
                             tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
                             format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
     
@@ -704,18 +704,7 @@ with dataset:
                     <b>Download data for project " + st.session_state.text_key + "</b>\
                 </a>"
                 st.sidebar.markdown(href, unsafe_allow_html=True)
-                st.download_button('Proba', ZipfileDotZip, file_name= 'Export_' + st.session_state.text_key + '_version_by_measure.zip')
-                
-                btn = st.download_button(
-                    label="Download ZIP",
-                    data=ZipfileDotZip,
-                    file_name="myfile.zip",
-                    mime="application/zip"
-                )
-                
-            with st.sidebar:
-                button = btn
-            # st.sidebar.markdown(btn, unsafe_allow_html=True)
+
             
             # wb = load_workbook("final.xlsx")
             # ws = wb['by_level']
