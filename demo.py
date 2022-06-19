@@ -110,7 +110,9 @@ def format_splits(splits):
     splits_final = {"1" : splits["1"]}
     
     
-    uuid_and_split = list(np.concatenate(if splits["1"] != []: [splits["1"].copy(), splits["2"] != []: splits["2"].copy(),splits["3"] != []: splits["3"].copy()]).flat)#ovde treba flatten za sva 3 nivoa splita
+    uuid_and_split = list(np.concatenate([splits["1"].copy(),splits["2"].copy(),splits["3"].copy()]).flat)#ovde treba flatten za sva 3 nivoa splita
+    st.write(uuid_and_split)
+    st.stop()
     uuid_and_split.append("uuid")
     
     if len(splits["2"]) > 0:
