@@ -325,7 +325,7 @@ def splitEngine(measures, splitScheme, levels):
         dfAll.reset_index(drop=True, inplace=True)
         tables.append(dfAll)
         st.info(level)
-        st.write(dfAll.astype(str))
+        # st.write(dfAll.astype(str))
 
 
     for level in tables_by_measure:
@@ -659,7 +659,7 @@ with dataset:
     
 
             tables = splitEngine2(chosen_measures, splits_final, parameters["sublevels"])
-    
+            st.write(tables.astype(str))
             with pd.ExcelWriter("final.xlsx") as writer:
 
                 for split_level in tables:
