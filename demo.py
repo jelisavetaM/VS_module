@@ -420,8 +420,9 @@ def splitEngine2(measures, splitScheme, levels):
         # st.write(table1)
         table2 = table.sort_values(by=['measurment','level','sublevel'])
         table2.reset_index(drop=True, inplace=True)
-
-        # st.write(table2.astype(str))
+        
+        st.write(split)
+        st.write(table2.astype(str))
         
         tables = {
             "by_level" : table1,
@@ -664,8 +665,8 @@ with dataset:
             for split_level in tables:
                 for t in tables[split_level]:
                     if t == "by_measure":
-                        st.info(split)
-                        st.write(tables[split_level][t].astype(str))
+                        # st.info(split)
+                        # st.write(tables[split_level][t].astype(str))
                     # tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
                     # format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
                     
