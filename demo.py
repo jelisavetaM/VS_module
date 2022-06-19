@@ -98,6 +98,11 @@ def get_df_with_answer_labels(df,vars_arr):
 def format_splits(splits):
     global uuid_and_split
     
+    st.write(splits)
+    st.write(splits["1"])
+    st.write(splits["2"])
+    st.write(splits["3"])
+    
     for lvl in splits:
         splits_short = []
         if lvl == "1":
@@ -531,7 +536,7 @@ with dataset:
             st.info("Choose nested splits - the second level nest:")
             splits_long["3"] =  st.multiselect("Type to search or just scroll:",questions_label_text, key="splits_lvl3")
             if len(splits_long["3"])>0 and len(splits_long["2"])==0:
-                st.error("You can't have split level 3, before you define split level 2!!!")
+                st.error("Please define second level nest before the third level.")
                 st.stop()
 
         splits_final = format_splits(splits_long)
