@@ -539,7 +539,9 @@ with dataset:
             if len(splits_long["3"])>0 and len(splits_long["2"])==0:
                 st.error("Please define second level nest before the third level.")
                 st.stop()
-        st.write(splits_long)
+        
+        splits_long1 = {k:v for k,v in splits_long.items() if v != []}
+        st.write(splits_long1)
         st.stop()
         splits_final = format_splits(splits_long)
         
