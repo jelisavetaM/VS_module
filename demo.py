@@ -358,9 +358,6 @@ def splitEngine2(measures, splitScheme, levels):
     if measures == []:
         st.error("Please choose at least one measurement.")
         st.stop()
-    # st.write(levels)
-    # st.write(splitScheme)
-    # st.stop()
     if levels == {}:
         st.error("Please choose at least one shopping level.")
         st.stop()
@@ -428,7 +425,7 @@ def splitEngine2(measures, splitScheme, levels):
             table = pd.concat([table,df_by_level])
     
     
-        st.write(table)
+        # st.write(table)
         table1 = table.sort_values(by=['level','sublevel','measurment'])
         table1.reset_index(drop=True, inplace=True)
         # st.write(table1)
@@ -675,10 +672,6 @@ with dataset:
                 for m in parameters["measurments"]:
                     if parameters["measurments"][m]:
                         chosen_measures.append(m)
-                
-                
-                parameters["sublevels"]
-    
 
                 tables = splitEngine2(chosen_measures, splits_final, parameters["sublevels"])
     
