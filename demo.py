@@ -111,8 +111,7 @@ def format_splits(splits):
     
     
     uuid_and_split = list(np.concatenate([splits["1"].copy(),splits["2"].copy(),splits["3"].copy()]).flat)#ovde treba flatten za sva 3 nivoa splita
-    st.write(uuid_and_split)
-    st.stop()
+    
     uuid_and_split.append("uuid")
     
     if len(splits["2"]) > 0:
@@ -540,7 +539,8 @@ with dataset:
             if len(splits_long["3"])>0 and len(splits_long["2"])==0:
                 st.error("Please define second level nest before the third level.")
                 st.stop()
-
+        st.write(splits_long)
+        st.stop()
         splits_final = format_splits(splits_long)
         
         
