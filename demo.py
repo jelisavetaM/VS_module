@@ -706,7 +706,7 @@ with dataset:
                     label="Download ZIP",
                     data=ZipfileDotZip,
                     file_name="myfile.zip",
-                    mime="application/x-7z-compressed"
+                    mime="application/octet-stream"
                 )
                 
             with st.sidebar:
