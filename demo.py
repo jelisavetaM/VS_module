@@ -136,7 +136,7 @@ def format_splits(splits):
     else:
         splits_final["3"] = []
     
-    
+    splits_final = {k:v for k,v in splits_final.items() if v != []}
     return splits_final
 
 def format_tables(workbook, worksheet, number_of_sheet_rows):
@@ -540,7 +540,7 @@ with dataset:
                 st.error("Please define second level nest before the third level.")
                 st.stop()
         
-        splits_long = {k:v for k,v in splits_long.items() if v != []}
+        
 
         splits_final = format_splits(splits_long)
         
