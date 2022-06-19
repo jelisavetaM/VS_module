@@ -704,7 +704,7 @@ with dataset:
                 
                 for sheet in wb.worksheets:
                     ws = wb[sheet.title]
-                    df = f.parse(ws)
+                    df = wb.parse(ws)
                     st.write(df)
                     st.stop()
                     ws.freeze_panes = ws['A4']
