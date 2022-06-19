@@ -663,8 +663,8 @@ with dataset:
             
             for split_level in tables:
                 for t in tables[split_level]:
-                    st.write(tables[split_level].astype(str))
                     # tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
+                    st.write(tables[split_level][t].astype(str))
                     # format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
                     
             with pd.ExcelWriter("final.xlsx") as writer:
