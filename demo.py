@@ -587,67 +587,67 @@ with dataset:
     
         shoppingMergedData = pd.merge(data_survey, df_vs, how='left', left_on='uuid', right_on='USER ID')
     
-        #STARO
-        if st.button("Run calculations - V1"):
-            chosen_measures = []
-            for m in parameters["measurments"]:
-                if parameters["measurments"][m]:
-                    chosen_measures.append(m)
+        STARO
+        # if st.button("Run calculations - V1"):
+            # chosen_measures = []
+            # for m in parameters["measurments"]:
+                # if parameters["measurments"][m]:
+                    # chosen_measures.append(m)
     
     
-            tables_arr = splitEngine(chosen_measures, splits_final["1"], parameters["sublevels"])
+            # tables_arr = splitEngine(chosen_measures, splits_final["1"], parameters["sublevels"])
     
-            tables = tables_arr[0]
-            tables_by_measure = tables_arr[1]
+            # tables = tables_arr[0]
+            # tables_by_measure = tables_arr[1]
     
     
-            with pd.ExcelWriter("final.xlsx") as writer:
-                filled_sheet_length_1 = 0
-                startrow = 0
-                for table in tables:
-                    table.to_excel(writer, sheet_name="by_level", startrow=startrow, startcol=0, index=True)
-                    startrow = startrow + table.shape[0] + 5
-                    filled_sheet_length_1+=startrow
+            # with pd.ExcelWriter("final.xlsx") as writer:
+                # filled_sheet_length_1 = 0
+                # startrow = 0
+                # for table in tables:
+                    # table.to_excel(writer, sheet_name="by_level", startrow=startrow, startcol=0, index=True)
+                    # startrow = startrow + table.shape[0] + 5
+                    # filled_sheet_length_1+=startrow
     
-                format_tables(writer.book, writer.sheets["by_level"], filled_sheet_length_1)
+                # format_tables(writer.book, writer.sheets["by_level"], filled_sheet_length_1)
     
-                filled_sheet_length_2 = 0
-                startrow_measure = 0
-                for level in tables_by_measure:
-                    for table in tables_by_measure[level]:
-                        tables_by_measure[level][table].to_excel(writer, sheet_name="by_measure", startrow=startrow_measure, startcol=0, index=True)
-                        startrow_measure = startrow_measure + tables_by_measure[level][table].shape[0] + 5
-                        filled_sheet_length_2+=startrow_measure
+                # filled_sheet_length_2 = 0
+                # startrow_measure = 0
+                # for level in tables_by_measure:
+                    # for table in tables_by_measure[level]:
+                        # tables_by_measure[level][table].to_excel(writer, sheet_name="by_measure", startrow=startrow_measure, startcol=0, index=True)
+                        # startrow_measure = startrow_measure + tables_by_measure[level][table].shape[0] + 5
+                        # filled_sheet_length_2+=startrow_measure
     
-                format_tables(writer.book, writer.sheets["by_measure"], filled_sheet_length_2)
+                # format_tables(writer.book, writer.sheets["by_measure"], filled_sheet_length_2)
     
         
     
-            wb = load_workbook("final.xlsx")
+            # wb = load_workbook("final.xlsx")
     
-            ws = wb['by_level']
-            row_reduced_height = []
-            for row in ws.iter_rows():
-                if not any(cell.value for cell in row):
-                    # ws.delete_rows(row[0].row)
-                    if row[0].row - 1 not in row_reduced_height:
-                        ws.row_dimensions[row[0].row].height = 0.5
-                        row_reduced_height.append(row[0].row)
+            # ws = wb['by_level']
+            # row_reduced_height = []
+            # for row in ws.iter_rows():
+                # if not any(cell.value for cell in row):
+                    ws.delete_rows(row[0].row)
+                    # if row[0].row - 1 not in row_reduced_height:
+                        # ws.row_dimensions[row[0].row].height = 0.5
+                        # row_reduced_height.append(row[0].row)
     
-            ws = wb['by_measure']
-            row_reduced_height = []
-            for row in ws.iter_rows():
-                if not any(cell.value for cell in row):
-                    # ws.delete_rows(row[0].row)
-                    if row[0].row - 1 not in row_reduced_height:
-                        ws.row_dimensions[row[0].row].height = 0.5
-                        row_reduced_height.append(row[0].row)
+            # ws = wb['by_measure']
+            # row_reduced_height = []
+            # for row in ws.iter_rows():
+                # if not any(cell.value for cell in row):
+                    ws.delete_rows(row[0].row)
+                    # if row[0].row - 1 not in row_reduced_height:
+                        # ws.row_dimensions[row[0].row].height = 0.5
+                        # row_reduced_height.append(row[0].row)
     
-            wb.save("final.xlsx")
+            # wb.save("final.xlsx")
     
                 
-            with open('final.xlsx', mode = "rb") as f:
-                st.download_button('Generate Excel Export', f, file_name= 'Export_' + st.session_state.text_key + '_version_1.xlsx')
+            # with open('final.xlsx', mode = "rb") as f:
+                # st.download_button('Generate Excel Export', f, file_name= 'Export_' + st.session_state.text_key + '_version_1.xlsx')
     
     
     
