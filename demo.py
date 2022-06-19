@@ -134,7 +134,7 @@ def format_splits(splits):
     else:
         splits_final["3"] = []
     
-    st.write(splits_final)
+    
     return splits_final
 
 def format_tables(workbook, worksheet, number_of_sheet_rows):
@@ -354,6 +354,7 @@ def splitEngine2(measures, splitScheme, levels):
     global shoppingMergedData
     dfAll_tables = {}
     for level_number, splits in splitScheme.items(): 
+        st.write(splits)
         table = pd.DataFrame()
         arrays = [[],[]]
         # arrays = [
