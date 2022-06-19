@@ -653,6 +653,8 @@ with dataset:
     
         #NOVO
         if st.button("Run calculations - V2"):
+            href = f"<p>Loading data</p>"
+                    st.sidebar.markdown(href, unsafe_allow_html=True)
             chosen_measures = []
             for m in parameters["measurments"]:
                 if parameters["measurments"][m]:
