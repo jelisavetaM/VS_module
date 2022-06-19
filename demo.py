@@ -675,15 +675,15 @@ with dataset:
             filenames = "file1.xlsx", "file2.xlsx"
             with ExitStack() as fs:
                 file1, file2 = (fs.enter_context(open(fn, "w")) for fn in filenames)
-                tables[1]['by_level'].to_excel(file1, sheet_name=t + split_level)
-                for split_level in tables:
-                    for t in tables[split_level]:
-                        if t == "by_measure":
-                            tables[split_level][t].to_excel(file1, sheet_name=t + split_level)
-                            format_tables(file1.book, file1.sheets[t + split_level], len(tables[split_level][t].index) + 3)    
-                        if t == "by_level":
-                            tables[split_level][t].to_excel(file2, sheet_name=t + split_level)
-                            format_tables(file2.book, file2.sheets[t + split_level], len(tables[split_level][t].index) + 3)
+                tables['1']['by_level'].to_excel(file1, sheet_name=t + split_level)
+                # for split_level in tables:
+                    # for t in tables[split_level]:
+                        # if t == "by_measure":
+                            # tables[split_level][t].to_excel(file1, sheet_name=t + split_level)
+                            # format_tables(file1.book, file1.sheets[t + split_level], len(tables[split_level][t].index) + 3)    
+                        # if t == "by_level":
+                            # tables[split_level][t].to_excel(file2, sheet_name=t + split_level)
+                            # format_tables(file2.book, file2.sheets[t + split_level], len(tables[split_level][t].index) + 3)
             
             # with pd.ExcelWriter("final_by_level.xlsx") as writer2:
 
