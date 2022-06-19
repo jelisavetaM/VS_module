@@ -663,7 +663,8 @@ with dataset:
                         chosen_measures.append(m)
         
     
-    
+                st.write(splits_final)
+                st.stop()
                 tables = splitEngine2(chosen_measures, splits_final, parameters["sublevels"])
     
                 # for split_level in tables:
