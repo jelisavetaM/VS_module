@@ -700,6 +700,7 @@ with dataset:
                 href = f"<a href=\"data:file/zip;base64,{b64}\" download='{ZipfileDotZip}.zip'>\
                     Click last model weights\
                 </a>"
+                href = st.download_button('Proba', ZipfileDotZip, file_name= 'Export_' + st.session_state.text_key + '_version_by_measure.xlsx')
             st.sidebar.markdown(href, unsafe_allow_html=True)
             
             # wb = load_workbook("final.xlsx")
