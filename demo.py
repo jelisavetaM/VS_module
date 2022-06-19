@@ -704,7 +704,7 @@ with dataset:
                 
                 for sheet in wb.worksheets:
                     ws = wb[sheet.title]
-                    df = pd.read_excel(wb, sheet = sheet.title)
+                    df = pd.read_excel(wb, sheet_name = sheet.title)
                     st.write(df.shape)
                     st.stop()
                     ws.freeze_panes = ws['A4']
