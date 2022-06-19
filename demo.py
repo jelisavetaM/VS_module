@@ -668,12 +668,21 @@ with dataset:
                     st.write(tables[split_level][t].astype(str))
                     # format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
                     
-            with pd.ExcelWriter("final.xlsx") as writer:
+            with pd.ExcelWriter("final_by_measure.xlsx") as writer:
 
                 for split_level in tables:
-                    for t in tables[split_level]:
-                        tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
-                        format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
+                    if split_level == "by_measure":
+                        for t in tables[split_level]:
+                            tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
+                            format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
+            
+            with pd.ExcelWriter("final_by_level.xlsx") as writer:
+
+                for split_level in tables:
+                    if split_level == "by_level":
+                        for t in tables[split_level]:
+                            tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
+                            format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
     
             # wb = load_workbook("final.xlsx")
             # ws = wb['by_level']
@@ -688,5 +697,8 @@ with dataset:
             # wb.save("final.xlsx")
     
     
-            with open('final.xlsx', mode = "rb") as f:
-                st.download_button('Generate Excel Export', f, file_name= 'Export_' + st.session_state.text_key + '_version_1.xlsx')
+            with open('final_by_measure.xlsx', mode = "rb") as f:
+                st.download_button('Generate Excel Export', f, file_name= 'Export_' + st.session_state.text_key + '_version_by_measure.xlsx')
+                
+            with open('final_by_level.xlsx', mode = "rb") as f:
+                st.download_button('Generate Excel Export', f, file_name= 'Export_' + st.session_state.text_key + '_version_by_level.xlsx')
