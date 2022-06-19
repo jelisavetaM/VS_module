@@ -676,6 +676,7 @@ with dataset:
             with ExitStack() as fs:
                 file1, file2 = (fs.enter_context(open(fn, "w")) for fn in filenames)
                 file2.write("Some text")
+                tables['1']['by_level'].to_excel(file2, sheet_name='test')
                 # for split_level in tables:
                     # for t in tables[split_level]:
                         # if t == "by_measure":
