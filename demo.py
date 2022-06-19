@@ -426,7 +426,6 @@ def splitEngine2(measures, splitScheme, levels):
         
         st.write(split)
         st.write(table2.astype(str))
-        st.stop()
         
         tables = {
             "by_level" : table1,
@@ -461,6 +460,7 @@ def splitEngine2(measures, splitScheme, levels):
                 table.reset_index(drop=True, inplace=True)
                 tables[t] = table
 
+        st.stop()
         dfAll_tables[level_number] = tables
         
         # st.write(tables["by_level"].astype(str))
