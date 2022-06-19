@@ -671,7 +671,7 @@ with dataset:
             with pd.ExcelWriter("final_by_measure.xlsx") as writer:
 
                 for split_level in tables:
-                    if split_level == "by_measure":
+                    if t == "by_measure":
                         for t in tables[split_level]:
                             tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
                             format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
@@ -679,7 +679,7 @@ with dataset:
             with pd.ExcelWriter("final_by_level.xlsx") as writer:
 
                 for split_level in tables:
-                    if split_level == "by_level":
+                    if t == "by_level":
                         for t in tables[split_level]:
                             tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
                             format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
