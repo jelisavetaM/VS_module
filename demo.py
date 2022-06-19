@@ -650,7 +650,7 @@ with dataset:
     
     
         #NOVO
-        if st.button("Run calculations   ➤"):
+        if st.button("Run calculations &#9658;"):
             with st.spinner('Calculating, plase wait...'):
             
                 chosen_measures = []
@@ -675,7 +675,7 @@ with dataset:
                     for split_level in tables:
                         for t in tables[split_level]:
                             if t == "by_measure":
-                                tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
+                                tables[split_level][t].to_excel(writer, sheet_name="Splits levels_" + split_level)
                                 format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
                 
                 with pd.ExcelWriter("final_by_level.xlsx") as writer:
@@ -683,7 +683,7 @@ with dataset:
                     for split_level in tables:
                         for t in tables[split_level]:
                             if t == "by_measure":
-                                tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
+                                tables[split_level][t].to_excel(writer, sheet_name="Splits levels_" + split_level)
                                 format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
         
                 zipObj = ZipFile("sample.zip", "w")
