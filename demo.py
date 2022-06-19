@@ -650,7 +650,7 @@ with dataset:
     
     
         #NOVO
-        if st.button("Run calculations - V2"):
+        if st.button("Run calculations &#9658;"):
             with st.spinner('Calculating, plase wait...'):
             
                 chosen_measures = []
