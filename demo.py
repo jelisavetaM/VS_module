@@ -706,8 +706,8 @@ with dataset:
                     ws = wb[sheet.title]
                     ws.freeze_panes = ws['A4']
                     row_temp = str(pd.DataFrame(ws.values).shape[1])
-                    ws.autofilter(0, 0, 10, 3)
-                    # ws.auto_filter.ref = "A" + row_temp + ":AA" + row_temp
+                    # ws.autofilter(0, 0, 10, 3)
+                    ws.auto_filter.ref = ws.dimensions
                 wb.save("final_by_level.xlsx")
             
     
