@@ -676,7 +676,7 @@ with dataset:
                         for t in tables[split_level]:
                             if t == "by_measure":
                                 tables[split_level][t].to_excel(writer, sheet_name="Splits levels_" + split_level)
-                                format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
+                                format_tables(writer.book, writer.sheets["Splits levels_" + split_level], len(tables[split_level][t].index) + 3)
                 
                 with pd.ExcelWriter("final_by_level.xlsx") as writer:
                 
@@ -684,7 +684,7 @@ with dataset:
                         for t in tables[split_level]:
                             if t == "by_measure":
                                 tables[split_level][t].to_excel(writer, sheet_name="Splits levels_" + split_level)
-                                format_tables(writer.book, writer.sheets[t + split_level], len(tables[split_level][t].index) + 3)
+                                format_tables(writer.book, writer.sheets["Splits levels_" + split_level], len(tables[split_level][t].index) + 3)
         
                 zipObj = ZipFile("sample.zip", "w")
                 zipObj.write("final_by_measure.xlsx")
