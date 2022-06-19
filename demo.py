@@ -704,11 +704,9 @@ with dataset:
                 
                 for sheet in wb.worksheets:
                     ws = wb[sheet.title]
-                    df = pd.DataFrame(ws.values)
-                    st.write(df.shape)
-                    st.stop()
                     ws.freeze_panes = ws['A4']
-                    ws.auto_filter.ref = "A3:AA3"
+                    row_temp = pd.DataFrame(ws.values).shape[1]
+                    ws.auto_filter.ref = "A" + row_temp + ":AA" + row_temp
                 wb.save("final_by_level.xlsx")
             
     
