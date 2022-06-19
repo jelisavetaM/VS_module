@@ -662,9 +662,9 @@ with dataset:
 
             tables = splitEngine2(chosen_measures, splits_final, parameters["sublevels"])
 
-            for split_level in tables:
-                for t in tables[split_level]:
-                    if t == "by_measure":
+            # for split_level in tables:
+                # for t in tables[split_level]:
+                    # if t == "by_measure":
                         # st.info(split)
                         # st.write(tables[split_level][t].astype(str))
                     # tables[split_level][t].to_excel(writer, sheet_name=t + split_level)
