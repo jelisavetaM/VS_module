@@ -673,7 +673,7 @@ with dataset:
             
             
             filenames = "file1.xlsx", "file2.xlsx"
-            with ExitStack() as stack:
+            with ExitStack() as fs:
                 file1, file2 = (fs.enter_context(open(fn, "w")) for fn in filenames)
 
                 for split_level in tables:
