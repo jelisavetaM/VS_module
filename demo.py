@@ -354,7 +354,7 @@ def splitEngine2(measures, splitScheme, levels):
     global shoppingMergedData
     dfAll_tables = {}
     for level_number, splits in splitScheme.items(): 
-        st.write(splits)
+
         table = pd.DataFrame()
         arrays = [[],[]]
         # arrays = [
@@ -372,6 +372,7 @@ def splitEngine2(measures, splitScheme, levels):
                 df_splits = pd.DataFrame()
                 sp_arr = ["", "", ""]
                 for split in splits:
+                    st.write(split)
                     df = get_measure_df(measure,level,split)
 
     
