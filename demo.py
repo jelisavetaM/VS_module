@@ -706,13 +706,13 @@ with dataset:
                     ws = wb[sheet.title]
                     ws.freeze_panes = ws['A4']
                     ws.auto_filter.ref = "A3:AA3"
-                    wb.save(wb)
+                    # wb.save(wb)
                     st.stop()
     
-                ws = wb['by_level']
-                ws.freeze_panes = ws['A4']
-                ws.auto_filter.ref = "A3:AA3"
-                wb.save("final_by_measure.xlsx")
+                # ws = wb['by_level']
+                # ws.freeze_panes = ws['A4']
+                # ws.auto_filter.ref = "A3:AA3"
+                # wb.save("final_by_measure.xlsx")
     
                 zipObj = ZipFile("sample.zip", "w")
                 zipObj.write("final_by_measure.xlsx")
