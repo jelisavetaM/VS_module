@@ -686,13 +686,13 @@ with dataset:
                             tables[split_level][t].to_excel(file2, sheet_name=t + split_level)
                             format_tables(file2.book, file2.sheets[t + split_level], len(tables[split_level][t].index) + 3)
             
-            with pd.ExcelWriter("final_by_level.xlsx") as writer2:
+            # with pd.ExcelWriter("final_by_level.xlsx") as writer2:
 
-                for split_level in tables:
-                    if t == "by_level":
-                        for t in tables[split_level]:
-                            tables[split_level][t].to_excel(writer2, sheet_name=t + split_level)
-                            format_tables(writer2.book, writer2.sheets[t + split_level], len(tables[split_level][t].index) + 3)
+                # for split_level in tables:
+                    # if t == "by_level":
+                        # for t in tables[split_level]:
+                            # tables[split_level][t].to_excel(writer2, sheet_name=t + split_level)
+                            # format_tables(writer2.book, writer2.sheets[t + split_level], len(tables[split_level][t].index) + 3)
     
             # wb = load_workbook("final.xlsx")
             # ws = wb['by_level']
