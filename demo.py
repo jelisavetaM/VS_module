@@ -372,8 +372,10 @@ def splitEngine2(measures, splitScheme, levels):
                 df_splits = pd.DataFrame()
                 sp_arr = ["", "", ""]
                 for split in splits:
-                    if split != []:
+                    try:
                         df = get_measure_df(measure,level,split)
+                    except:
+                        st.error(split)
 
     
                     try:
