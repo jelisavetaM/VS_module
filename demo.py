@@ -705,7 +705,9 @@ with dataset:
                 for sheet in wb.worksheets:
                     ws = wb[sheet.title]
                     ws.freeze_panes = ws['A4']
-                    st.write(ws.max_row)
+                    for cell in ws["A"]:
+                        if cell.value is None:
+                        ws.freeze_panes = ws[cell.row + cell.column]
                     # row_temp = str(pd.DataFrame(ws.values).shape[1])
                     # ws.auto_filter.ref = "A" + row_temp + ":AA" + row_temp
                 wb.save("final_by_level.xlsx")
