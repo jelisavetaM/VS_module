@@ -704,8 +704,8 @@ with dataset:
                 
                 for sheet in wb.worksheets:
                     ws = wb[sheet.title]
-                    df = wb.parse(ws)
-                    st.write(df)
+                    df = read_excel(wb, sheet = sheet.title)
+                    st.write(df.shape)
                     st.stop()
                     ws.freeze_panes = ws['A4']
                     ws.auto_filter.ref = "A3:AA3"
