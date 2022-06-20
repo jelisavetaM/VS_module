@@ -708,7 +708,6 @@ with dataset:
                 wb_measure = load_workbook("final_by_measure.xlsx")
                 wb_level = load_workbook("final_by_level.xlsx")
                 
-                cell_format = wb_level.add_format({'bold': True, 'italic': True})
 
                    
            
