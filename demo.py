@@ -699,7 +699,7 @@ with dataset:
                 
                     for split_level in tables:
                         for t in tables[split_level]:
-                            if t == "by_measure":
+                            if t == "by_level":
                                 tables[split_level][t].to_excel(writer, sheet_name="Splits levels_" + split_level)
                                 format_tables(writer.book, writer.sheets["Splits levels_" + split_level], len(tables[split_level][t].index) + 3)
         
