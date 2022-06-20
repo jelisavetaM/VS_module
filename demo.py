@@ -53,6 +53,7 @@ def get_vs_data(vs_db_files):
     # st.write(df_vs)
     return df_vs
 
+@st.cache(allow_output_mutation=True)
 def get_datamap(datamap_json_file):
     datamap = {}
     questions_label_text = []
