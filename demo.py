@@ -700,25 +700,35 @@ with dataset:
                                 tables[split_level][t].to_excel(writer, sheet_name="Splits levels_" + split_level)
                                 format_tables(writer.book, writer.sheets["Splits levels_" + split_level], len(tables[split_level][t].index) + 3)
         
-                wb = load_workbook("final_by_measure.xlsx")
-                wb = load_workbook("final_by_level.xlsx")
+                wb_measure = load_workbook("final_by_measure.xlsx")
+                wb_level = load_workbook("final_by_level.xlsx")
                 
-                for sheet in wb.worksheets:
-                    ws = wb[sheet.title]
+                for sheet in wb_measure.worksheets:
+                    ws = wb_measure[sheet.title]
                     ws.freeze_panes = ws['A4']
                     for cell in ws["A"]:
                         if cell.value is None:
                             ws.freeze_panes = ws["A" + str(cell.row)]
                             col_temp = re.sub(r'[^a-zA-Z]', '', ws.dimensions.split(":")[1])
                             ws.auto_filter.ref = "A" + str(cell.row) + ":" + col_temp + str(cell.row)
-                wb.save("final_by_level.xlsx")
+                wb_measure.save("final_by_measure.xlsx")
+                
+                for sheet in wb_level.worksheets:
+                    ws = wb_level[sheet.title]
+                    ws.freeze_panes = ws['A4']
+                    for cell in ws["A"]:
+                        if cell.value is None:
+                            ws.freeze_panes = ws["A" + str(cell.row)]
+                            col_temp = re.sub(r'[^a-zA-Z]', '', ws.dimensions.split(":")[1])
+                            ws.auto_filter.ref = "A" + str(cell.row) + ":" + col_temp + str(cell.row)
+                wb_level.save("final_by_level.xlsx")
             
     
                 zipObj = ZipFile("sample.zip", "w")
                 zipObj.write("final_by_measure.xlsx")
                 zipObj.write("final_by_level.xlsx")
                 zipObj.close()
-                ZipfileDotZip = "sample.zip"
+                ZipfileDotZip = 'Export_' + st.session_state.text_key + '.zip'
                 
                 
                 with open(ZipfileDotZip, "rb") as f:
