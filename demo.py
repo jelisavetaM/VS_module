@@ -717,7 +717,9 @@ with dataset:
                             ws.freeze_panes = ws["A" + str(cell.row)]
                             col_temp = re.sub(r'[^a-zA-Z]', '', ws.dimensions.split(":")[1])
                             ws.auto_filter.ref = "A" + str(cell.row) + ":" + col_temp + str(cell.row)
-                    ws.set_row(0, 18, {'bold': True, 'font_color': 'red'})
+                    a1 = ws['A1']
+                    a1.font = Font(color="FF0000")
+                    a1.fill = fills.PatternFill(patternType='solid', fgColor=Color(rgb='00FF00'))
                     ws.column_dimensions['C'].width = 35
                     ws.column_dimensions['D'].width = 30
                     
