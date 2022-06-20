@@ -1,3 +1,2 @@
 openpyxl
 xlsxwriter
-win32com
