@@ -10,6 +10,8 @@ from zipfile import ZipFile
 from io import BytesIO
 import base64
 import re
+from openpyxl.styles import Color, PatternFill, Font, Border
+from openpyxl.styles import colors
 
 
 with open('style.css') as f:
