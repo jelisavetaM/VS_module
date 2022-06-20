@@ -708,7 +708,7 @@ with dataset:
                     for cell in ws["A"]:
                         if cell.value is None:
                             ws.freeze_panes = ws["A" + str(cell.row)]
-                            ws.auto_filter.ref = "A" + str(cell.row) + ":AA" + str(cell.row)
+                            ws.auto_filter.ref = "A" + str(cell.row) + ":" + chr(97 + row.column)+chr(97+ row.column) + str(cell.row)
                 wb.save("final_by_level.xlsx")
             
     
