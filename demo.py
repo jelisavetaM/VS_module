@@ -707,9 +707,7 @@ with dataset:
                     ws.freeze_panes = ws['A4']
                     for cell in ws["A"]:
                         if cell.value is None:
-                            st.write(str(cell.row))
-                            st.write(str(cell.column))
-                            # ws.freeze_panes = ws[str(cell.row) + str(cell.column)]
+                            ws.freeze_panes = ws["A" + str(row.row)]
                     # row_temp = str(pd.DataFrame(ws.values).shape[1])
                     # ws.auto_filter.ref = "A" + row_temp + ":AA" + row_temp
                 wb.save("final_by_level.xlsx")
