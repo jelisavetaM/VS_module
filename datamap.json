@@ -57,14 +57,14 @@
       "label": "status", 
       "values": [
         {
-          "label": "terminated", 
-          "value": 1, 
-          "title": "Terminated"
+          "label": "Non-user", 
+          "value": 0, 
+          "title": "Non-user"
         }, 
         {
-          "label": "overquota", 
-          "value": 2, 
-          "title": "Overquota"
+          "label": "User", 
+          "value": 1, 
+          "title": "User"
         }, 
         {
           "label": "qualified", 
