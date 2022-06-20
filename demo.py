@@ -94,6 +94,7 @@ def get_df_with_answer_labels(df,vars_arr):
     
     for col in df_return.columns:
         st.write(type(df_return.columns))
+        st.write(df_return.columns.drop_duplicates(keep ='first'))
         st.stop()
         labels = list(set(df_return[col].values))
         for lab in labels:
