@@ -708,8 +708,7 @@ with dataset:
                     for cell in ws["A"]:
                         if cell.value is None:
                             ws.freeze_panes = ws["A" + str(cell.row)]
-                    # row_temp = str(pd.DataFrame(ws.values).shape[1])
-                    # ws.auto_filter.ref = "A" + row_temp + ":AA" + row_temp
+                    ws.auto_filter.ref = "A" + str(cell.row) + ":AA" + cell.column
                 wb.save("final_by_level.xlsx")
             
     
