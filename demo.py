@@ -10,7 +10,6 @@ from zipfile import ZipFile
 from io import BytesIO
 import base64
 import re
-import win32com.client as win32
 
 
 with open('style.css') as f:
@@ -704,7 +703,6 @@ with dataset:
                 wb_measure = load_workbook("final_by_measure.xlsx")
                 wb_level = load_workbook("final_by_level.xlsx")
                 
-                excel = win32.gencache.EnsureDispatch('Excel.Application')
                 
                 for sheet in wb_measure.worksheets:
                     ws = wb_measure[sheet.title]
@@ -714,7 +712,7 @@ with dataset:
                             ws.freeze_panes = ws["A" + str(cell.row)]
                             col_temp = re.sub(r'[^a-zA-Z]', '', ws.dimensions.split(":")[1])
                             ws.auto_filter.ref = "A" + str(cell.row) + ":" + col_temp + str(cell.row)
-                    ws.Columns.AutoFit()
+                    ws.set_column(1, 3, 30)
                 wb_measure.save("final_by_measure.xlsx")
                 
                 for sheet in wb_level.worksheets:
@@ -725,7 +723,7 @@ with dataset:
                             ws.freeze_panes = ws["A" + str(cell.row)]
                             col_temp = re.sub(r'[^a-zA-Z]', '', ws.dimensions.split(":")[1])
                             ws.auto_filter.ref = "A" + str(cell.row) + ":" + col_temp + str(cell.row)
-                    ws.Columns.AutoFit()
+                    ws.set_column(1, 3, 30)
                 wb_level.save("final_by_level.xlsx")
                 
                 
