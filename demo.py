@@ -719,7 +719,7 @@ with dataset:
                             ws.auto_filter.ref = "A" + str(cell.row) + ":" + col_temp + str(cell.row)
                     ws.column_dimensions['C'].width = 35
                     ws.column_dimensions['D'].width = 30
-                    ws.cell(row=cell.row,column=cell.column).fill = lightblueFill
+                    # ws.cell(row=cell.row, column=cell.column).fill = lightblueFill
                     if sheet.title == "Splits levels_1":
                         ws.column_dimensions['A'].hidden= True
                 wb_measure.save("final_by_measure.xlsx")
