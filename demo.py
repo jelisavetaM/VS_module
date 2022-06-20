@@ -724,11 +724,12 @@ with dataset:
                 wb_level.save("final_by_level.xlsx")
             
     
-                zipObj = ZipFile("sample.zip", "w")
+                zipName = 'Export_' + st.session_state.text_key + '.zip'
+                zipObj = ZipFile(zipName, "w")
                 zipObj.write("final_by_measure.xlsx")
                 zipObj.write("final_by_level.xlsx")
                 zipObj.close()
-                ZipfileDotZip = 'Export_' + st.session_state.text_key + '.zip'
+                ZipfileDotZip = zipName
                 
                 
                 with open(ZipfileDotZip, "rb") as f:
