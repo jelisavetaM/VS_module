@@ -22,15 +22,15 @@ def style_table(v):
         return 'color:red;'
     else:
         return None
-
+@st.cache(allow_output_mutation=True)
 def convert_df(df):
      # IMPORTANT: Cache the conversion to prevent computation on every rerun
      return df.to_csv(index=False)
-
+@st.cache(allow_output_mutation=True)
 def get_survey_data(survey_db):
     survey_db = 'https://raw.githubusercontent.com/jelisavetaM/VS_module/main/220437.xlsx'
     return pd.read_excel(survey_db)
-
+@st.cache
 def get_vs_data(vs_db_files):
     df_vs = pd.DataFrame()
     vs_db_files = ['https://raw.githubusercontent.com/jelisavetaM/VS_module/main/Report%20Products%20-%202022044_vs_cell1.csv','https://raw.githubusercontent.com/jelisavetaM/VS_module/main/Report%20Products%20-%202022044_vs_cell2.csv', 'https://raw.githubusercontent.com/jelisavetaM/VS_module/main/Report%20Products%20-%202022044_vs_cell3.csv']
@@ -50,7 +50,7 @@ def get_vs_data(vs_db_files):
     df_vs = df_vs.astype({'MONEY SPENT':'float', 'PRICE':'float'})
     # st.write(df_vs)
     return df_vs
-
+@st.cache(allow_output_mutation=True)
 def get_datamap(datamap_json_file):
     datamap = {}
     questions_label_text = []
@@ -79,7 +79,7 @@ def get_datamap(datamap_json_file):
         datamap[q_title] = q_json
         questions_label_text.append(q_title + "->" + var["title"])
     return [datamap,questions_label_text]   
-
+@st.cache(allow_output_mutation=True)
 def get_df_with_answer_labels(df,vars_arr):
     global datamap
     if vars_arr == "ALL":
