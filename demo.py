@@ -710,6 +710,8 @@ with dataset:
                         if cell.value is None:
                             ws.freeze_panes = ws["A" + str(cell.row)]
                             col_temp = re.sub(r'[^a-zA-Z]', '', ws.dimensions.split(":")[1])
+                            st.write("A" + str(cell.row) + ":" + col_temp + col_temp + str(cell.row))
+                            st.stop()
                             ws.auto_filter.ref = "A" + str(cell.row) + ":" + col_temp + col_temp + str(cell.row)
                 wb.save("final_by_level.xlsx")
             
