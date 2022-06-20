@@ -519,7 +519,7 @@ with dataset:
         df_vs = get_vs_data("vs_db_files")
         # st.write(df_vs)
         #splits
-        st.sidebar.write(pd.DataFrame(questions_label_text, index=None, columns=["questions"]))
+        st.sidebar.write(pd.DataFrame(questions_label_text, index=None, columns=["Survey questions - double click to expand"]))
         st.sidebar.download_button(label="datamap json", data=str(datamap), file_name="datamap.json",mime='text/csv')
         # st.sidebar.write(datamap)
         # st.stop()
