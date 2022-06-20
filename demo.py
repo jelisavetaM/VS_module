@@ -706,10 +706,7 @@ with dataset:
                 wb_measure = load_workbook("final_by_measure.xlsx")
                 wb_level = load_workbook("final_by_level.xlsx")
                 
-                header_format = workbook.add_format({
-                    'bold': True,
-                    'fg_color': '#ffcccc',
-                    'border': 1})    
+                header_format = workbook.add_format({'bold': True,'fg_color': '#ffcccc','border': 1})    
                 
                 for sheet in wb_measure.worksheets:
                     ws = wb_measure[sheet.title]
