@@ -723,7 +723,7 @@ with dataset:
                     ws.column_dimensions['D'].width = 30
 					
                     data_format1 = writer.book.add_format({'bg_color': '#FFC7CE'})
-                    ws.set_row(10, cell_format=data_format1)
+                    writer.book.get_worksheet_by_name(sheet.title).set_row(10, cell_format=data_format1)
 					
                     if sheet.title == "Splits levels_1":
                         ws.column_dimensions['A'].hidden= True
