@@ -715,7 +715,7 @@ with dataset:
                             ws.freeze_panes = ws["A" + str(cell.row)]
                             col_temp = re.sub(r'[^a-zA-Z]', '', ws.dimensions.split(":")[1])
                             ws.auto_filter.ref = "A" + str(cell.row) + ":" + col_temp + str(cell.row)
-                    ws.set_column('B:D', 30)
+                    ws.column_dimensions['B'].width = 20
                 wb_measure.save("final_by_measure.xlsx")
                 
                 for sheet in wb_level.worksheets:
@@ -726,7 +726,7 @@ with dataset:
                             ws.freeze_panes = ws["A" + str(cell.row)]
                             col_temp = re.sub(r'[^a-zA-Z]', '', ws.dimensions.split(":")[1])
                             ws.auto_filter.ref = "A" + str(cell.row) + ":" + col_temp + str(cell.row)
-                    ws.set_column('B:D', 30)
+                    # ws.set_column('B:D', 30)
                 wb_level.save("final_by_level.xlsx")
                 
                 
