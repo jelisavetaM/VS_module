@@ -93,8 +93,6 @@ def get_df_with_answer_labels(df,vars_arr):
         df_return = df[vars_arr]
     
     for col in df_return.columns:
-        st.write(list(set(df_return[col].tolist())))
-        st.stop()
         labels = list(set(df_return[col].tolist()))
         for lab in labels:
             if datamap[col]["answers"] and lab in datamap[col]["answers"]:
