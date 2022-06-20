@@ -705,8 +705,7 @@ with dataset:
         
                 wb_measure = load_workbook("final_by_measure.xlsx")
                 wb_level = load_workbook("final_by_level.xlsx")
-                
-                header_format = wb_measure.add_format({'bold': True,'fg_color': '#ffcccc','border': 1})    
+                   
                 
                 for sheet in wb_measure.worksheets:
                     ws = wb_measure[sheet.title]
@@ -718,7 +717,7 @@ with dataset:
                             ws.auto_filter.ref = "A" + str(cell.row) + ":" + col_temp + str(cell.row)
                     ws.column_dimensions['C'].width = 35
                     ws.column_dimensions['D'].width = 30
-                    ws.write(0, 2, 3, header_format)
+                    ws.cell(row=1,column=2).fill = lightblueFill
                     if sheet.title == "Splits levels_1":
                         ws.column_dimensions['A'].hidden= True
                 wb_measure.save("final_by_measure.xlsx")
