@@ -708,7 +708,12 @@ with dataset:
                 wb_measure = load_workbook("final_by_measure.xlsx")
                 wb_level = load_workbook("final_by_level.xlsx")
                    
-                lightblueFill = PatternFill(start_color='c9e1f8', end_color='c9e1f8', fill_type='solid')
+                header_format = workbook.add_format({
+                    'bold': True,
+                    'text_wrap': True,
+                    'valign': 'top',
+                    'fg_color': '#D7E4BC',
+                    'border': 1})
                 for sheet in wb_measure.worksheets:
                     ws = wb_measure[sheet.title]
                     ws.freeze_panes = ws['A4']
@@ -717,7 +722,8 @@ with dataset:
                             ws.freeze_panes = ws["A" + str(cell.row)]
                             col_temp = re.sub(r'[^a-zA-Z]', '', ws.dimensions.split(":")[1])
                             ws.auto_filter.ref = "A" + str(cell.row) + ":" + col_temp + str(cell.row)
-                            ws.cell(row=cell.row, column=8).fill = lightblueFill
+                    for col_num, value in enumerate(df.columns.values):
+                        ws.write(0, col_num + 1, value, header_format)
                     ws.column_dimensions['C'].width = 35
                     ws.column_dimensions['D'].width = 30
                     
