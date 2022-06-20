@@ -95,6 +95,7 @@ def get_df_with_answer_labels(df,vars_arr):
     for col in df_return.columns.drop_duplicates(keep ='first'):
         st.write(col)
         labels = list(df_return[col])
+        st.write(labels)
         for lab in labels:
             if datamap[col]["answers"] and lab in datamap[col]["answers"]:
                 df_return[col] = df_return[col].replace(lab, datamap[col]["answers"][lab])
