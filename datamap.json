@@ -49,12 +49,12 @@
       "qlabel": null
     }, 
     {
-      "vgroup": "Users", 
-      "qtitle": "Category users", 
+      "vgroup": "USERS", 
+      "qtitle": "Category USERS", 
       "colTitle": null, 
-      "title": "Category users", 
+      "title": "Category USERS", 
       "rowTitle": null, 
-      "label": "Users", 
+      "label": "USERS", 
       "values": [
         {
           "label": "Non-user", 
@@ -80,7 +80,7 @@
       "row": null, 
       "type": "single", 
       "col": null, 
-      "qlabel": "Users"
+      "qlabel": "USERS"
     }, 
     {
       "vgroup": "GENERIC_INTRO", 
@@ -13126,15 +13126,15 @@
       "grouping": "rows"
     }, 
     {
-      "qtitle": "Users", 
+      "qtitle": "USERS", 
       "variables": [
         {
-          "vgroup": "Users", 
-          "qtitle": "Category users", 
+          "vgroup": "USERS", 
+          "qtitle": "Category USERS", 
           "colTitle": null, 
-          "title": "Category users", 
+          "title": "Category USERS", 
           "rowTitle": null, 
-          "label": "Users", 
+          "label": "USERS", 
           "values": [
             {
               "label": "terminated", 
@@ -13160,7 +13160,7 @@
           "row": null, 
           "type": "single", 
           "col": null, 
-          "qlabel": "Category users"
+          "qlabel": "Category USERS"
         }
       ], 
       "values": [
