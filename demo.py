@@ -300,7 +300,7 @@ def splitEngine(measures, splitScheme, levels):
                     sp_arr.append(split)
                 
                 if df_splits.empty:
-                    df.insert(2, 'measurment', measure)
+                    df.insert(2, 'measurement', measure)
                     df_splits = df
                 else:
                     df_splits = pd.merge(df_splits, df, how='left', on=["level","sublevel"])
@@ -526,7 +526,7 @@ with dataset:
         col_measurments,col_splits = st.columns(2)
         
         with col_measurments:
-            st.info("Choose measurments:")
+            st.info("Choose measurements:")
             measurments = ["Consideration on total sample","Penetration on total sample","Total Units","Total Value","Share of Total Units","Share of Total Value","Unit Buy Rate (Units per Buyer)","Value Buy Rate(Value per Buyer)"]
             
             parameters["measurments"] = {}
