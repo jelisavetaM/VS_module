@@ -721,7 +721,7 @@ with dataset:
                             ws.freeze_panes = ws["A" + str(cell.row)]
                             col_temp = re.sub(r'[^a-zA-Z]', '', ws.dimensions.split(":")[1])
                             ws.auto_filter.ref = "A" + str(cell.row) + ":" + col_temp + str(cell.row)
-                            ws.delete_cols(0,0)
+                            ws.delete_cols(1,1)
                 wb_level.save("final_by_level.xlsx")
             
     
