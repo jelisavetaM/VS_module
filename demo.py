@@ -30,7 +30,7 @@ def convert_df(df):
 def get_survey_data(survey_db):
     survey_db = 'https://raw.githubusercontent.com/jelisavetaM/VS_module/main/220437.xlsx'
     return pd.read_excel(survey_db)
-@st.cache(allow_output_mutation=True)
+@st.cache
 def get_vs_data(vs_db_files):
     df_vs = pd.DataFrame()
     vs_db_files = ['https://raw.githubusercontent.com/jelisavetaM/VS_module/main/Report%20Products%20-%202022044_vs_cell1.csv','https://raw.githubusercontent.com/jelisavetaM/VS_module/main/Report%20Products%20-%202022044_vs_cell2.csv', 'https://raw.githubusercontent.com/jelisavetaM/VS_module/main/Report%20Products%20-%202022044_vs_cell3.csv']
@@ -712,7 +712,7 @@ with dataset:
                             ws.freeze_panes = ws["A" + str(cell.row)]
                             col_temp = re.sub(r'[^a-zA-Z]', '', ws.dimensions.split(":")[1])
                             ws.auto_filter.ref = "A" + str(cell.row) + ":" + col_temp + str(cell.row)
-                    ws.set_column(1, 3, 30)
+                    # ws.set_column(1, 3, 30)
                 wb_measure.save("final_by_measure.xlsx")
                 
                 for sheet in wb_level.worksheets:
@@ -723,7 +723,7 @@ with dataset:
                             ws.freeze_panes = ws["A" + str(cell.row)]
                             col_temp = re.sub(r'[^a-zA-Z]', '', ws.dimensions.split(":")[1])
                             ws.auto_filter.ref = "A" + str(cell.row) + ":" + col_temp + str(cell.row)
-                    ws.set_column(1, 3, 30)
+                    # ws.set_column(1, 3, 30)
                 wb_level.save("final_by_level.xlsx")
                 
                 
