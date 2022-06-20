@@ -671,7 +671,7 @@ with dataset:
     
         #NOVO
         if st.button("Run calculations    ➤"):
-            with st.spinner('Calculating, plase wait...'):
+            with st.spinner('Calculating, plase wait. Once done, you will see red download data button on the left section.'):
             
                     
                 chosen_measures = []
