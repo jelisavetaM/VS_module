@@ -717,7 +717,7 @@ with dataset:
                             ws.freeze_panes = ws["A" + str(cell.row)]
                             col_temp = re.sub(r'[^a-zA-Z]', '', ws.dimensions.split(":")[1])
                             ws.auto_filter.ref = "A" + str(cell.row) + ":" + col_temp + str(cell.row)
-                            ws.cell(row=cell.row, column=cell.column).fill = lightblueFill
+                            ws.cell(row=cell.row, column=8).fill = lightblueFill
                     ws.column_dimensions['C'].width = 35
                     ws.column_dimensions['D'].width = 30
                     
