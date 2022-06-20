@@ -719,11 +719,12 @@ with dataset:
                             ws.freeze_panes = ws["A" + str(cell.row)]
                             col_temp = re.sub(r'[^a-zA-Z]', '', ws.dimensions.split(":")[1])
                             ws.auto_filter.ref = "A" + str(cell.row) + ":" + col_temp + str(cell.row)
-                    a1 = ws['A1']
-                    a1.font = Font(color="FF0000")
                     ws.column_dimensions['C'].width = 35
                     ws.column_dimensions['D'].width = 30
-                    
+					
+					data_format1 = writer.book.add_format({'bg_color': '#FFC7CE'})
+                    ws.set_row(10, cell_format=data_format1)
+					
                     if sheet.title == "Splits levels_1":
                         ws.column_dimensions['A'].hidden= True
                 wb_measure.save("final_by_measure.xlsx")
