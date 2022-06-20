@@ -91,7 +91,8 @@ def get_df_with_answer_labels(df,vars_arr):
         df_return = df
     else:
         df_return = df[vars_arr]
-    
+        
+    df_return = df_return.loc[:,~df_return.columns.duplicated()].copy()
     for col in df_return.columns.drop_duplicates(keep ='first'):
         st.write(df_return)
         st.stop()
