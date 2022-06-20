@@ -707,8 +707,9 @@ with dataset:
         
                 wb_measure = load_workbook("final_by_measure.xlsx")
                 wb_level = load_workbook("final_by_level.xlsx")
-                   
-                header_format = wb_measure.add_format({
+                
+                wb_measure.book = workbook                
+                header_format = workbook.add_format({
                     'bold': True,
                     'text_wrap': True,
                     'valign': 'top',
