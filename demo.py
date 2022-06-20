@@ -707,6 +707,9 @@ with dataset:
         
                 wb_measure = load_workbook("final_by_measure.xlsx")
                 wb_level = load_workbook("final_by_level.xlsx")
+                
+                cell_format = wb_level.add_format({'bold': True, 'italic': True})
+
                    
            
                 for sheet in wb_measure.worksheets:
@@ -719,7 +722,6 @@ with dataset:
                             ws.auto_filter.ref = "A" + str(cell.row) + ":" + col_temp + str(cell.row)
                     a1 = ws['A1']
                     a1.font = Font(color="FF0000")
-                    # a1.fill = fills.PatternFill(patternType='solid', fgColor=Color(rgb='00FF00'))
                     ws.column_dimensions['C'].width = 35
                     ws.column_dimensions['D'].width = 30
                     
