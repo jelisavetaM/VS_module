@@ -49,12 +49,12 @@
       "qlabel": null
     }, 
     {
-      "vgroup": "status", 
-      "qtitle": "Participant status", 
+      "vgroup": "Users", 
+      "qtitle": "Category users", 
       "colTitle": null, 
-      "title": "Participant status", 
+      "title": "Category users", 
       "rowTitle": null, 
-      "label": "status", 
+      "label": "Users", 
       "values": [
         {
           "label": "Non-user", 
@@ -80,7 +80,7 @@
       "row": null, 
       "type": "single", 
       "col": null, 
-      "qlabel": "status"
+      "qlabel": "Users"
     }, 
     {
       "vgroup": "GENERIC_INTRO", 
